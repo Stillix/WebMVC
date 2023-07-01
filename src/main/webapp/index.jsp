@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>Sign</title>
 </head>
 <body>
 
@@ -13,7 +13,7 @@
     Password <input type="password" name="password" value=""/><br>
     <input type="submit" name="submit" value="Ok"/>
 
-    ${login_msg}
+    ${login_failed}
 </form>
 
 </body>
