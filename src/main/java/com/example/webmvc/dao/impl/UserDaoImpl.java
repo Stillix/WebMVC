@@ -3,11 +3,11 @@ package com.example.webmvc.dao.impl;
 import com.example.webmvc.dao.BaseDao;
 import com.example.webmvc.dao.UserDao;
 import com.example.webmvc.entity.User;
+import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.pool.ConnectionPool;
 
 import java.sql.*;
 import java.util.List;
-import java.util.Properties;
 
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final String SELECT_PASSWORD_WHERE_LOGIN = "SELECT password FROM users WHERE login=?";
@@ -18,11 +18,6 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
 
     public static UserDaoImpl getInstance() {
         return instance;
-    }
-
-    @Override
-    public boolean insert(User user) {
-        return false;
     }
 
     @Override
@@ -47,11 +42,11 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public boolean authenticate(String login, String password) {
+    public boolean authenticate(String login, String password) throws DaoException {
         boolean match = false;
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SELECT_PASSWORD_WHERE_LOGIN)){
-            statement.setString(1,login);
+             PreparedStatement statement = connection.prepareStatement(SELECT_PASSWORD_WHERE_LOGIN)) {
+            statement.setString(1, login);
             ResultSet resultSet = statement.executeQuery();
             String passFromDb;
             if (resultSet.next()) {
@@ -59,7 +54,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 match = password.equals(passFromDb);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
         return match;
     }

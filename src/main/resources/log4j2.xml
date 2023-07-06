@@ -11,13 +11,13 @@
             <PatternLayout pattern="%r %-5level %logger{1} - %msg%n"/>
         </Console>
 
-        <RollingFile name="FileRolling" filename="${LOG_DIR}/log.txt" append="true"
+        <RollingFile name="File" filename="${LOG_DIR}/log.txt" append="true"
                      filePattern="${LOG_DIR}/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH-mm}_%i.log">
             <PatternLayout pattern="${pattern_file}"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="10 KB"/>
+                <SizeBasedTriggeringPolicy size="100 KB"/>
             </Policies>
-            <DefaultRolloverStrategy max="10"/>
+            <DefaultRolloverStrategy max="15"/>
         </RollingFile>
     </Appenders>
 

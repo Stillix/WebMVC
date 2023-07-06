@@ -6,26 +6,37 @@ import com.example.webmvc.command.Command;
 import com.example.webmvc.command.CommandType;
 import com.example.webmvc.command.impl.AddUserCommand;
 import com.example.webmvc.command.impl.LoginCommand;
+import com.example.webmvc.exception.CommandException;
+import com.example.webmvc.pool.ConnectionPool;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @WebServlet(name = "helloServlet", urlPatterns = {"/controller", "*.do"})
 public class Controller extends HttpServlet {
-    public void init() {
+    private static Logger logger = LogManager.getLogger();
 
+    public void init() {
+        ConnectionPool.getInstance();
+        logger.info("Servlet init" + this.getServletInfo());
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
-//        String strNum = request.getParameter("num");
-//        int resNum= 2*Integer.parseInt(strNum);
-//        request.setAttribute("result",resNum);
-
         String commandStr = request.getParameter("command");
         Command command = CommandType.defineCommand(commandStr);
-        String page = command.execute(request);
-        request.getRequestDispatcher(page).forward(request, response);
+        String page;
+        try {
+            page = command.execute(request);
+            request.getRequestDispatcher(page).forward(request, response);
+            // response.sendRedirect(page);
+        } catch (CommandException e) {
+//            response.sendError(500);
+            throw new ServletException(e);
+
+        }
     }
 
     @Override
@@ -35,5 +46,7 @@ public class Controller extends HttpServlet {
     }
 
     public void destroy() {
+        ConnectionPool.getInstance().destroyPool();
+        logger.info("Servlet destroyed" + this.getServletName());
     }
 }

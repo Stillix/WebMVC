@@ -11,6 +11,13 @@
   <title>Profile</title>
 </head>
 <body>
-Hello, ${user}
+Hello, (forward) = ${user}
+<br><br><br>
+Hi (redirect/forward) = ${user_name}
+<br>
+<form action="controller">
+  <input type="hidden" name="command" value="logout">
+<input type="submit" value="Logout">
+</form>
 </body>
 </html>

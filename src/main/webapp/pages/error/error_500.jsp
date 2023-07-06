@@ -8,9 +8,13 @@
 <%@ page isErrorPage="true" contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>500</title>
+    <title>Error page 500</title>
 </head>
 <body>
-java.lang.Throwable
+The requested URI was: ${pageContext.errorData.requestURI}<br/><br/>
+The status of the error is : ${pageContext.errorData.statusCode}<br/><br/>
+Servlet name : ${pageContext.errorData.getServletName} <br>
+Exception : ${pageContext.exception} <br> <br> <br><br>
+Message from exception : ${pageContext.exception.message}
 </body>
 </html>
