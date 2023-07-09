@@ -1,4 +1,4 @@
-package com.example.webmvc.util;
+package com.example.webmvc.command;
 
 public final class RequestAttributeName {
 

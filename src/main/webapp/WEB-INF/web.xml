@@ -7,24 +7,19 @@
 <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
 </welcome-file-list>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/pages/error/error_404.jsp</location>
-    </error-page>
-    <error-page>
-        <exception-type>java.lang.RuntimeException</exception-type>
-        <location>/pages/error/error_500.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/pages/error/error_500.jsp</location>
-    </error-page>
+<!--    <error-page>-->
+<!--        <error-code>404</error-code>-->
+<!--        <location>/pages/error/error_404.jsp</location>-->
+<!--    </error-page>-->
+<!--    <error-page>-->
+<!--        <exception-type>java.lang.RuntimeException</exception-type>-->
+<!--        <location>/pages/error/error_500.jsp</location>-->
+<!--    </error-page>-->
+<!--    <error-page>-->
+<!--        <error-code>500</error-code>-->
+<!--        <location>/pages/error/error_500.jsp</location>-->
+<!--    </error-page>-->
     <session-config>
         <session-timeout>35</session-timeout>
     </session-config>
-    <listener>
-        <listener-class>
-            com.example.webmvc.controller.listener.SessionListenerImpl
-        </listener-class>
-    </listener>
 </web-app>

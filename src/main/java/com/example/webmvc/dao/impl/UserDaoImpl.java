@@ -5,12 +5,25 @@ import com.example.webmvc.dao.UserDao;
 import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.pool.ConnectionPool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
+    private static Logger logger = LogManager.getLogger();
     private static final String SELECT_PASSWORD_WHERE_LOGIN = "SELECT password FROM users WHERE login=?";
+    private static final String DELETE_USER_WHERE_ID = "DELETE FROM users WHERE id = ?";
+    private static final String GET_ALL_USERS = "SELECT * FROM users";
+    private static final String GET_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
+    private static final String GET_USER_BY_NAME = "SELECT * FROM users WHERE name = ?";
+    private static final String GET_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
+    private static final String INSERT_USER = "INSERT INTO users (login, password,name,surname,phone,email,id_role) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_USER_WHERE_ID = "UPDATE users SET login = ?, password = ?,name= ?,surname= ?,phone= ?,email= ?,id_role=? WHERE id = ?";
+
     private static UserDaoImpl instance = new UserDaoImpl();
 
     private UserDaoImpl() {
@@ -21,24 +34,159 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public boolean delete(User user) {
-        return false;
+    public boolean delete(User user) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_USER_WHERE_ID)) {
+            statement.setInt(1, user.getUserId());
+            int rowsDeleted = statement.executeUpdate();
+            return rowsDeleted > 0;
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage());
+        }
     }
 
     @Override
-    public User update(User user) {
-        return null;
+    public boolean update(User user) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_WHERE_ID)) {
+            statement.setString(1, user.getUserLogin());
+            statement.setString(2, user.getUserPassword());
+            statement.setString(3, user.getUserName());
+            statement.setString(4, user.getUserSurname());
+            statement.setString(5, user.getUserPhone());
+            statement.setString(6, user.getUserEmail());
+            statement.setInt(7, user.getUserRoleId());
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage());
+        }
     }
 
     @Override
-    public User create() {
-        return null;
+    public Optional<User> create(User user) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, user.getUserLogin());
+            statement.setString(2, user.getUserPassword());
+            statement.setString(3, user.getUserName());
+            statement.setString(4, user.getUserSurname());
+            statement.setString(5, user.getUserPhone());
+            statement.setString(6, user.getUserEmail());
+            statement.setInt(7, user.getUserRoleId());
+
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                ResultSet generatedKeys = statement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int generatedId = generatedKeys.getInt(1);
+                    user.setUserId(generatedId);
+                    return Optional.of(user);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Failed to create user", e);
+        }
+        return Optional.empty();
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll() throws DaoException {
+        List<User> userList = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_ALL_USERS);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String login = resultSet.getString("login");
+                String password = resultSet.getString("password");
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                String phone = resultSet.getString("phone");
+                String email = resultSet.getString("email");
+                int roleId = resultSet.getInt("role_id");
+                User user = new User(id, login, password, name, surname, phone, email, roleId);
+                userList.add(user);
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return userList;
+    }
 
-        return null;
+    @Override
+    public Optional<User> getUserById(int id) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int userId = resultSet.getInt(1);
+                    String userLogin = resultSet.getString(2);
+                    String userPassword = resultSet.getString(3);
+                    String userName = resultSet.getString(4);
+                    String userSurname = resultSet.getString(5);
+                    String userPhone = resultSet.getString(6);
+                    String userEmail = resultSet.getString(7);
+                    int userRoleId = resultSet.getInt(8);
+                    User user = new User(userId, userLogin, userPassword, userName, userSurname, userPhone, userEmail, userRoleId);
+                    return Optional.of(user);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> getUserByName(String username) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_NAME)) {
+            statement.setString(1, username);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int userId = resultSet.getInt(1);
+                    String userLogin = resultSet.getString(2);
+                    String userPassword = resultSet.getString(3);
+                    String userName = resultSet.getString(4);
+                    String userSurname = resultSet.getString(5);
+                    String userPhone = resultSet.getString(6);
+                    String userEmail = resultSet.getString(7);
+                    int userRoleId = resultSet.getInt(8);
+                    User user = new User(userId, userLogin, userPassword, userName, userSurname, userPhone, userEmail, userRoleId);
+                    return Optional.of(user);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> getUserByLogin(String login) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_LOGIN)) {
+            statement.setString(1, login);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int userId = resultSet.getInt(1);
+                    String userLogin = resultSet.getString(2);
+                    String userPassword = resultSet.getString(3);
+                    String userName = resultSet.getString(4);
+                    String userSurname = resultSet.getString(5);
+                    String userPhone = resultSet.getString(6);
+                    String userEmail = resultSet.getString(7);
+                    int userRoleId = resultSet.getInt(8);
+                    User user = new User(userId, userLogin, userPassword, userName, userSurname, userPhone, userEmail, userRoleId);
+                    return Optional.of(user);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -47,11 +195,12 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_PASSWORD_WHERE_LOGIN)) {
             statement.setString(1, login);
-            ResultSet resultSet = statement.executeQuery();
-            String passFromDb;
-            if (resultSet.next()) {
-                passFromDb = resultSet.getString(1);
-                match = password.equals(passFromDb);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                String passFromDb;
+                if (resultSet.next()) {
+                    passFromDb = resultSet.getString(1);
+                    match = password.equals(passFromDb);
+                }
             }
         } catch (SQLException e) {
             throw new DaoException(e);

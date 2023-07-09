@@ -31,7 +31,6 @@ public class Controller extends HttpServlet {
         try {
             page = command.execute(request);
             request.getRequestDispatcher(page).forward(request, response);
-            // response.sendRedirect(page);
         } catch (CommandException e) {
 //            response.sendError(500);
             throw new ServletException(e);

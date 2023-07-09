@@ -8,11 +8,11 @@ import com.example.webmvc.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import static com.example.webmvc.util.Message.FAILED_LOGIN_MSG;
-import static com.example.webmvc.util.RequestAttributeName.FAILED_LOGIN;
-import static com.example.webmvc.util.RequestAttributeName.USER;
-import static com.example.webmvc.util.RequestParameterName.LOGIN;
-import static com.example.webmvc.util.RequestParameterName.PASSWORD;
+import static com.example.webmvc.command.Message.FAILED_LOGIN_MSG;
+import static com.example.webmvc.command.RequestAttributeName.FAILED_LOGIN;
+import static com.example.webmvc.command.RequestAttributeName.USER;
+import static com.example.webmvc.command.RequestParameterName.LOGIN;
+import static com.example.webmvc.command.RequestParameterName.PASSWORD;
 
 public class LoginCommand implements Command {
     @Override
@@ -26,7 +26,7 @@ public class LoginCommand implements Command {
             if (userService.authenticate(login, password)) {
                 request.setAttribute(USER, login);
                 session.setAttribute("user_name", login);
-                page = "pages/profile.jsp";
+                page = "pages/registration.jsp";
             } else {
                 request.setAttribute(FAILED_LOGIN, FAILED_LOGIN_MSG);
                 page = "index.jsp";

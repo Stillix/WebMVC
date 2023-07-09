@@ -1,4 +1,4 @@
-package com.example.webmvc.proxy;
+package com.example.webmvc.pool;
 
 import java.sql.*;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.concurrent.Executor;
 public class ProxyConnection implements Connection {
     private Connection connection;
 
-    private ProxyConnection(Connection connection) {
+    ProxyConnection(Connection connection) {
         this.connection = connection;
     }
 
@@ -54,9 +54,15 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void close() throws SQLException {
-        connection.close();
+        ConnectionPool.getInstance().releaseConnection(this);
     }
-
+    void isReallyClose(){
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new ExceptionInInitializerError(e.getMessage());
+        }
+    }
     @Override
     public boolean isClosed() throws SQLException {
         return connection.isClosed();
