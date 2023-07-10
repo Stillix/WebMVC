@@ -33,7 +33,6 @@ public class AddUserCommand implements Command {
 
             if (userService.isLoginAvailable(login)) {
                 User user = new User(0, login, password, name, surname, phone, email, 1);
-
                 Optional<User> createdUser = userDao.create(user);
                 if (createdUser.isPresent()) {
                     return "/pages/success_register.jsp";

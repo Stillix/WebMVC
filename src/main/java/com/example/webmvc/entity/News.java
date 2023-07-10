@@ -5,14 +5,14 @@ import java.time.LocalDateTime;
 public class News {
     private int newsId;
     private String title;
-    private int idMissingPerson;
+    private int personId;
     private String Content;
     private LocalDateTime publicationDate;
 
-    public News(int newsId, String title, int idMissingPerson, String content, LocalDateTime publicationDate) {
+    public News(int newsId, String title, int personId, String content, LocalDateTime publicationDate) {
         this.newsId = newsId;
         this.title = title;
-        this.idMissingPerson = idMissingPerson;
+        this.personId = personId;
         Content = content;
         this.publicationDate = publicationDate;
     }
@@ -33,12 +33,12 @@ public class News {
         this.title = title;
     }
 
-    public int getIdMissingPerson() {
-        return idMissingPerson;
+    public int getPersonId() {
+        return personId;
     }
 
-    public void setIdMissingPerson(int idMissingPerson) {
-        this.idMissingPerson = idMissingPerson;
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 
     public String getContent() {

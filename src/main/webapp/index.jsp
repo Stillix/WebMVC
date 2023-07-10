@@ -2,19 +2,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sign</title>
+    <title>Главная страница</title>
 </head>
 <body>
 
 <br/>
-<form action="controller">
-    <input type="hidden" name="command" value="login"/>
-    Login <input type="text" name="login" value=""/> <br>
-    Password <input type="password" name="password" value=""/><br>
-    <input type="submit" name="submit" value="Ok"/>
 
-    ${login_failed}
-</form>
+Для авторизации передите на <a href="pages/authorization.jsp">страницу входа</a><br>
+Для регистрации передите на <a href="pages/registration.jsp">страницу регистрации</a>
 
 </body>
 </html>

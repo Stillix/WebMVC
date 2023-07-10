@@ -26,10 +26,10 @@ public class LoginCommand implements Command {
             if (userService.authenticate(login, password)) {
                 request.setAttribute(USER, login);
                 session.setAttribute("user_name", login);
-                page = "pages/registration.jsp";
+                page = "/pages/profile.jsp";
             } else {
                 request.setAttribute(FAILED_LOGIN, FAILED_LOGIN_MSG);
-                page = "index.jsp";
+                page = "/pages/authorization.jsp";
             }
             session.setAttribute("current_page", page);
         } catch (ServiceException e) {

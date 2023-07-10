@@ -12,7 +12,7 @@
 </head>
 <body>
 <h1 style="color:lightgreen">Регистрация прошла успешно</h1>
-Перейдите на <a href="index.jsp">страницу входа</a>
+Перейдите на <a href="authorization.jsp">страницу входа</a>
 
 </body>
 </html>
