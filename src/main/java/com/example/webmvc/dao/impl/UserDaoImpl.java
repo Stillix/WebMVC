@@ -4,6 +4,7 @@ import com.example.webmvc.dao.BaseDao;
 import com.example.webmvc.dao.UserDao;
 import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.DaoException;
+import com.example.webmvc.mapper.impl.UserMapperImpl;
 import com.example.webmvc.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,7 +67,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     @Override
     public Optional<User> create(User user) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getUserLogin());
             statement.setString(2, user.getUserPassword());
             statement.setString(3, user.getUserName());
@@ -80,8 +81,17 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 ResultSet resultSet = statement.getGeneratedKeys();
                 if (resultSet.next()) {
                     int key = resultSet.getInt(1);
-                    user.setUserId(key);
-                    return Optional.of(user);
+                    User createdUser = User.newBuilder()
+                            .setUserId(key)
+                            .setUserLogin(user.getUserLogin())
+                            .setUserPassword(user.getUserPassword())
+                            .setUserName(user.getUserName())
+                            .setUserSurname(user.getUserSurname())
+                            .setUserPhone(user.getUserPhone())
+                            .setUserEmail(user.getUserEmail())
+                            .setUserRoleId(user.getUserRoleId())
+                            .build();
+                    return Optional.of(createdUser);
                 }
             }
         } catch (SQLException e) {
@@ -97,16 +107,25 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
              PreparedStatement statement = connection.prepareStatement(GET_ALL_USERS);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String login = resultSet.getString("login");
-                String password = resultSet.getString("password");
-                String name = resultSet.getString("name");
-                String surname = resultSet.getString("surname");
-                String phone = resultSet.getString("phone");
-                String email = resultSet.getString("email");
-                int roleId = resultSet.getInt("role_id");
-                User user = new User(id, login, password, name, surname, phone, email, roleId);
-                userList.add(user);
+                int userId = resultSet.getInt(1);
+                String userLogin = resultSet.getString(2);
+                String userPassword = resultSet.getString(3);
+                String userName = resultSet.getString(4);
+                String userSurname = resultSet.getString(5);
+                String userPhone = resultSet.getString(6);
+                String userEmail = resultSet.getString(7);
+                int userRoleId = resultSet.getInt(8);
+                User createdUser = User.newBuilder()
+                        .setUserId(userId)
+                        .setUserLogin(userLogin)
+                        .setUserPassword(userPassword)
+                        .setUserName(userName)
+                        .setUserSurname(userSurname)
+                        .setUserPhone(userPhone)
+                        .setUserEmail(userEmail)
+                        .setUserRoleId(userRoleId)
+                        .build();
+                userList.add(createdUser);
             }
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -120,7 +139,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
              PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     int userId = resultSet.getInt(1);
                     String userLogin = resultSet.getString(2);
                     String userPassword = resultSet.getString(3);
@@ -129,8 +148,17 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                     String userPhone = resultSet.getString(6);
                     String userEmail = resultSet.getString(7);
                     int userRoleId = resultSet.getInt(8);
-                    User user = new User(userId, userLogin, userPassword, userName, userSurname, userPhone, userEmail, userRoleId);
-                    return Optional.of(user);
+                    User createdUser = User.newBuilder()
+                            .setUserId(userId)
+                            .setUserLogin(userLogin)
+                            .setUserPassword(userPassword)
+                            .setUserName(userName)
+                            .setUserSurname(userSurname)
+                            .setUserPhone(userPhone)
+                            .setUserEmail(userEmail)
+                            .setUserRoleId(userRoleId)
+                            .build();
+                    return Optional.of(createdUser);
                 }
             }
         } catch (SQLException e) {
@@ -154,8 +182,17 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                     String userPhone = resultSet.getString(6);
                     String userEmail = resultSet.getString(7);
                     int userRoleId = resultSet.getInt(8);
-                    User user = new User(userId, userLogin, userPassword, userName, userSurname, userPhone, userEmail, userRoleId);
-                    return Optional.of(user);
+                    User createdUser = User.newBuilder()
+                            .setUserId(userId)
+                            .setUserLogin(userLogin)
+                            .setUserPassword(userPassword)
+                            .setUserName(userName)
+                            .setUserSurname(userSurname)
+                            .setUserPhone(userPhone)
+                            .setUserEmail(userEmail)
+                            .setUserRoleId(userRoleId)
+                            .build();
+                    return Optional.of(createdUser);
                 }
             }
         } catch (SQLException e) {
@@ -171,16 +208,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setString(1, login);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    int userId = resultSet.getInt(1);
-                    String userLogin = resultSet.getString(2);
-                    String userPassword = resultSet.getString(3);
-                    String userName = resultSet.getString(4);
-                    String userSurname = resultSet.getString(5);
-                    String userPhone = resultSet.getString(6);
-                    String userEmail = resultSet.getString(7);
-                    int userRoleId = resultSet.getInt(8);
-                    User user = new User(userId, userLogin, userPassword, userName, userSurname, userPhone, userEmail, userRoleId);
-                    return Optional.of(user);
+                    UserMapperImpl userMapper = new UserMapperImpl();
+                    return Optional.ofNullable(userMapper.buildObj(resultSet));
                 }
             }
         } catch (SQLException e) {

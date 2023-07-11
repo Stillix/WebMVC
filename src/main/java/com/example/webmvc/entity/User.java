@@ -13,80 +13,94 @@ public class User extends AbstractEntity {
     private String userEmail;
     private int userRoleId;
 
-    public User(int userId, String userLogin, String userPassword, String userName, String userSurname, String userPhone, String userEmail, int userRoleId) {
-        this.userLogin = userLogin;
-        this.userPassword = userPassword;
-        this.userName = userName;
-        this.userSurname = userSurname;
-        this.userPhone = userPhone;
-        this.userEmail = userEmail;
-        this.userRoleId = userRoleId;
+    private User() {
     }
 
     public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public String getUserLogin() {
         return userLogin;
-    }
-
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
     }
 
     public String getUserPassword() {
         return userPassword;
     }
 
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
     public String getUserName() {
         return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getUserSurname() {
         return userSurname;
     }
 
-    public void setUserSurname(String userSurname) {
-        this.userSurname = userSurname;
-    }
-
     public String getUserPhone() {
         return userPhone;
-    }
-
-    public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone;
     }
 
     public String getUserEmail() {
         return userEmail;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
     public int getUserRoleId() {
         return userRoleId;
     }
 
-    public void setUserRoleId(int userRoleId) {
-        this.userRoleId = userRoleId;
+    public static Builder newBuilder() {
+        return new User().new Builder();
     }
 
+
+    public class Builder {
+
+        private Builder() {
+        }
+
+        public Builder setUserId(int userId) {
+            User.this.userId = userId;
+            return this;
+        }
+
+        public Builder setUserLogin(String userLogin) {
+            User.this.userLogin = userLogin;
+            return this;
+        }
+
+        public Builder setUserPassword(String userPassword) {
+            User.this.userPassword = userPassword;
+            return this;
+        }
+
+        public Builder setUserName(String userName) {
+            User.this.userName = userName;
+            return this;
+        }
+
+        public Builder setUserSurname(String userSurname) {
+            User.this.userSurname = userSurname;
+            return this;
+        }
+
+        public Builder setUserPhone(String userPhone) {
+            User.this.userPhone = userPhone;
+            return this;
+        }
+
+        public Builder setUserEmail(String userEmail) {
+            User.this.userEmail = userEmail;
+            return this;
+        }
+
+        public Builder setUserRoleId(int userRoleId) {
+            User.this.userRoleId = userRoleId;
+            return this;
+        }
+        public User build() {
+            return User.this;
+        }
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

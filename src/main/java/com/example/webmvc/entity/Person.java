@@ -3,14 +3,15 @@ package com.example.webmvc.entity;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class Person {
+public class Person extends AbstractEntity {
     private int personId;
     private String personName;
     private String personSurname;
     private int personAge;
     private String description;
     private int PersonStatusId;
-
+    private Person(){
+    }
     public Person(int personId, String personName, String personSurname, int personAge, String description, int personStatusId) {
         this.personId = personId;
         this.personName = personName;
@@ -24,50 +25,63 @@ public class Person {
         return personId;
     }
 
-    public void setPersonId(int personId) {
-        this.personId = personId;
-    }
-
     public String getPersonName() {
         return personName;
-    }
-
-    public void setPersonName(String personName) {
-        this.personName = personName;
     }
 
     public String getPersonSurname() {
         return personSurname;
     }
 
-    public void setPersonSurname(String personSurname) {
-        this.personSurname = personSurname;
-    }
-
     public int getPersonAge() {
         return personAge;
-    }
-
-    public void setPersonAge(int personAge) {
-        this.personAge = personAge;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getPersonStatusId() {
         return PersonStatusId;
     }
 
-    public void setPersonStatusId(int personStatusId) {
-        PersonStatusId = personStatusId;
+    public static Builder newBuilder() {
+        return new Person().new Builder();
     }
 
+
+    public class Builder {
+
+        private Builder() {
+        }
+
+        public void setPersonId(int personId) {
+            Person.this.personId = personId;
+        }
+
+        public void setPersonName(String personName) {
+            Person.this.personName = personName;
+        }
+
+        public void setPersonSurname(String personSurname) {
+            Person.this.personSurname = personSurname;
+        }
+
+        public void setPersonAge(int personAge) {
+            Person.this.personAge = personAge;
+        }
+
+        public void setDescription(String description) {
+            Person.this.description = description;
+        }
+
+        public void setPersonStatusId(int personStatusId) {
+            Person.this.PersonStatusId = personStatusId;
+        }
+        public Person build() {
+            return Person.this;
+        }
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -27,21 +27,30 @@ public class AddUserCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String login = request.getParameter(LOGIN);
-        String password = request.getParameter(PASSWORD);
-        String name = request.getParameter(NAME);
-        String surname = request.getParameter(SURNAME);
-        String phone = request.getParameter(PHONE);
-        String email = request.getParameter(EMAIL);
+        String userLogin = request.getParameter(LOGIN);
+        String userPassword = request.getParameter(PASSWORD);
+        String userName = request.getParameter(NAME);
+        String userSurname = request.getParameter(SURNAME);
+        String userPhone = request.getParameter(PHONE);
+        String userEmail = request.getParameter(EMAIL);
 
         UserService userService = UserServiceImpl.getInstance();
         UserDaoImpl userDao = UserDaoImpl.getInstance();
 
         LoginValidatorImpl loginValidator = new LoginValidatorImpl();
         try {
-            if (userService.isLoginAvailable(login)) {
-                if (loginValidator.isValidLogin(login) && loginValidator.isValidPassword(password)) {
-                    User user = new User(0, login, password, name, surname, phone, email, 1);
+            if (userService.isLoginAvailable(userLogin)) {
+                if (loginValidator.isValidLogin(userLogin) && loginValidator.isValidPassword(userPassword)) {
+                    User user = User.newBuilder()
+                            .setUserId(0)
+                            .setUserLogin(userLogin)
+                            .setUserPassword(userPassword)
+                            .setUserName(userName)
+                            .setUserSurname(userSurname)
+                            .setUserPhone(userPhone)
+                            .setUserEmail(userEmail)
+                            .setUserRoleId(1)
+                            .build();
                     Optional<User> createdUser = userDao.create(user);
                     logger.log(Level.INFO, "User was successfully created and added to the database" + user);
                     if (createdUser.isPresent()) {
