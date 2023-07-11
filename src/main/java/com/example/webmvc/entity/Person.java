@@ -7,15 +7,17 @@ public class Person {
     private int personId;
     private String personName;
     private String personSurname;
-    private int age;
+    private int personAge;
     private String description;
+    private int PersonStatusId;
 
-    public Person(int personId, String personName, String personSurname, int age, String description) {
+    public Person(int personId, String personName, String personSurname, int personAge, String description, int personStatusId) {
         this.personId = personId;
         this.personName = personName;
         this.personSurname = personSurname;
-        this.age = age;
+        this.personAge = personAge;
         this.description = description;
+        PersonStatusId = personStatusId;
     }
 
     public int getPersonId() {
@@ -42,12 +44,12 @@ public class Person {
         this.personSurname = personSurname;
     }
 
-    public int getAge() {
-        return age;
+    public int getPersonAge() {
+        return personAge;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setPersonAge(int personAge) {
+        this.personAge = personAge;
     }
 
     public String getDescription() {
@@ -58,17 +60,25 @@ public class Person {
         this.description = description;
     }
 
+    public int getPersonStatusId() {
+        return PersonStatusId;
+    }
+
+    public void setPersonStatusId(int personStatusId) {
+        PersonStatusId = personStatusId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return personId == person.personId && age == person.age && Objects.equals(personName, person.personName) && Objects.equals(personSurname, person.personSurname) && Objects.equals(description, person.description);
+        return personId == person.personId && personAge == person.personAge && PersonStatusId == person.PersonStatusId && Objects.equals(personName, person.personName) && Objects.equals(personSurname, person.personSurname) && Objects.equals(description, person.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(personId, personName, personSurname, age, description);
+        return Objects.hash(personId, personName, personSurname, personAge, description, PersonStatusId);
     }
 
     @Override
@@ -77,8 +87,9 @@ public class Person {
                 .add("personId=" + personId)
                 .add("personName='" + personName + "'")
                 .add("personSurname='" + personSurname + "'")
-                .add("age=" + age)
+                .add("personAge=" + personAge)
                 .add("description='" + description + "'")
+                .add("PersonStatusId=" + PersonStatusId)
                 .toString();
     }
 }

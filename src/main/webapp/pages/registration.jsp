@@ -12,7 +12,7 @@
 </head>
 <body>
 <h1>Регистрация</h1>
-<form action="controller">
+<form action="/WebMVC_war_exploded/controller" method="post">
   <input type="hidden" name="command" value="add_user">
   Логин: <input type="text" name="login" required><br>
   Пароль: <input type="password" name="password" required><br>
@@ -21,7 +21,8 @@
   Телефон: <input type="text" name="phone" required><br>
   Email: <input type="email" name="email" required><br>
  <br>
-  <input type="submit" value="Зарегистрироваться">
+  <input type="submit" value="Зарегистрироваться"><br>
+    ${errorMessage}
 </form>
 </body>
 </html>

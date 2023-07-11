@@ -7,6 +7,6 @@ public class LogoutCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         request.getSession().invalidate();
-        return  "index.jsp";
+        return  "pages/authorization.jsp";
     }
 }

@@ -11,13 +11,13 @@
     <title>Authorization</title>
 </head>
 <body>
-<form action="controller">
+<form action="/WebMVC_war_exploded/controller" method="post">
   <input type="hidden" name="command" value="login"/>
   Login <input type="text" name="login" value=""/> <br>
   Password <input type="password" name="password" value=""/><br>
   <input type="submit" name="submit" value="Ok"/>
   ${login_failed}
-
 </form>
+
 </body>
 </html>

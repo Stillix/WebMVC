@@ -1,13 +1,18 @@
 package com.example.webmvc.dao;
 
 import com.example.webmvc.entity.Statement;
+import com.example.webmvc.entity.User;
+import com.example.webmvc.exception.DaoException;
 
-import java.util.List;
+
+import java.util.Optional;
 
 public interface StatementDao {
-    void saveRequest(Statement request);
-    void updateRequest(Statement request);
-    void deleteRequest(int id);
-    Statement getRequestById(int id);
-    List<Statement> getAllRequests();
+    Optional<Statement> getStatementByStatus(int id) throws DaoException;
+
+    Optional<Statement> getStatementByPerson(int id) throws DaoException;
+
+    Optional<Statement> getStatementByName(String username) throws DaoException;
+
+
 }

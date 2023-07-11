@@ -13,7 +13,7 @@ public abstract class BaseDao<T extends AbstractEntity> {
 
     public abstract boolean update(T t) throws DaoException;
 
-    public abstract Optional<User> create(User user) throws DaoException;
+    public abstract Optional<T> create(T t) throws DaoException;
 
     public abstract List<T> findAll() throws DaoException;
 }

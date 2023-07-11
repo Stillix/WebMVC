@@ -7,6 +7,7 @@ import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.UserService;
 
+
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
@@ -18,6 +19,7 @@ public class UserServiceImpl implements UserService {
     public static UserService getInstance() {
         return instance;
     }
+
     public boolean isLoginAvailable(String login) throws ServiceException {
         try {
             UserDao userDao = UserDaoImpl.getInstance();
@@ -31,7 +33,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean authenticate(String login, String password) throws ServiceException {
-        //валидация логина и пароля
         UserDaoImpl userDao = UserDaoImpl.getInstance();
         boolean match = false;
         try {

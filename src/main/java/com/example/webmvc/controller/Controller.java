@@ -24,6 +24,10 @@ public class Controller extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         String commandStr = request.getParameter("command");
         Command command = CommandType.defineCommand(commandStr);
@@ -36,12 +40,6 @@ public class Controller extends HttpServlet {
             throw new ServletException(e);
 
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
     }
 
     public void destroy() {

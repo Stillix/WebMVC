@@ -77,10 +77,10 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
-                ResultSet generatedKeys = statement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int generatedId = generatedKeys.getInt(1);
-                    user.setUserId(generatedId);
+                ResultSet resultSet = statement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    int key = resultSet.getInt(1);
+                    user.setUserId(key);
                     return Optional.of(user);
                 }
             }
