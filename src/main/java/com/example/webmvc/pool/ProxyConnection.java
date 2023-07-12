@@ -1,11 +1,15 @@
 package com.example.webmvc.pool;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
 public class ProxyConnection implements Connection {
+    private static Logger logger = LogManager.getLogger();
     private Connection connection;
 
     ProxyConnection(Connection connection) {
@@ -56,13 +60,15 @@ public class ProxyConnection implements Connection {
     public void close() throws SQLException {
         ConnectionPool.getInstance().releaseConnection(this);
     }
-    void isReallyClose(){
+
+    void ReallyClose() {
         try {
             connection.close();
         } catch (SQLException e) {
-            throw new ExceptionInInitializerError(e.getMessage());
+            logger.error("Error closing connections" + e.getMessage());
         }
     }
+
     @Override
     public boolean isClosed() throws SQLException {
         return connection.isClosed();

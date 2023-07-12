@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class UserMapperImpl implements Mapper<User> {
 
     @Override
-    public User buildObj(ResultSet resultSet) throws SQLException {
+    public User buildEntity(ResultSet resultSet) throws SQLException {
         if (resultSet.next()) {
             int userId = resultSet.getInt(1);
             String userLogin = resultSet.getString(2);

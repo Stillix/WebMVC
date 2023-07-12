@@ -134,7 +134,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> getUserById(int id) throws DaoException {
+    public Optional<User> findUserById(int id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID)) {
             statement.setInt(1, id);
@@ -168,7 +168,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> getUserByName(String username) throws DaoException {
+    public Optional<User> findUserByName(String username) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_USER_BY_NAME)) {
             statement.setString(1, username);
@@ -202,14 +202,14 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> getUserByLogin(String login) throws DaoException {
+    public Optional<User> findUserByLogin(String login) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_USER_BY_LOGIN)) {
             statement.setString(1, login);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     UserMapperImpl userMapper = new UserMapperImpl();
-                    return Optional.ofNullable(userMapper.buildObj(resultSet));
+                    return Optional.ofNullable(userMapper.buildEntity(resultSet));
                 }
             }
         } catch (SQLException e) {

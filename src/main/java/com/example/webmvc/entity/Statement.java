@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class Statement extends AbstractEntity{
+public class Statement extends AbstractEntity {
     private int statementId;
     private int userId;
     private int personId;

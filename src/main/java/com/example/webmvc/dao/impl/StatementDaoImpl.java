@@ -36,7 +36,7 @@ public class StatementDaoImpl extends BaseDao<Statement> implements StatementDao
     }
 
     @Override
-    public Optional<Statement> getStatementByStatus(int id) throws DaoException{
+    public Optional<Statement> findStatementByStatus(int id) throws DaoException{
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_BY_STATUS)) {
             statement.setInt(1, id);
@@ -61,7 +61,7 @@ public class StatementDaoImpl extends BaseDao<Statement> implements StatementDao
     }
 
     @Override
-    public Optional<Statement> getStatementByPerson(int id) throws DaoException {
+    public Optional<Statement> findStatementByPerson(int id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(GET_INFO_PERSON)) {
             statement.setInt(1, id);
@@ -86,7 +86,7 @@ public class StatementDaoImpl extends BaseDao<Statement> implements StatementDao
     }
 
     @Override
-    public Optional<Statement> getStatementByName(String username) throws DaoException {
+    public Optional<Statement> findStatementByName(String username) throws DaoException {
         return Optional.empty();
     }
 }

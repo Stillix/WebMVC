@@ -30,12 +30,12 @@ public class PersonDaoImpl extends BaseDao<Person> implements PersonDao {
     }
 
     @Override
-    public Optional<Person> getPersonByName(String username) throws DaoException {
+    public Optional<Person> findPersonByName(String username) throws DaoException {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Person> getPersonBySurname(String username) throws DaoException {
+    public Optional<Person> findPersonBySurname(String username) throws DaoException {
         return Optional.empty();
     }
 }

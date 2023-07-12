@@ -118,10 +118,13 @@ public class User extends AbstractEntity {
     public String toString() {
         return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
                 .add("userId=" + userId)
+                .add("userLogin='" + userLogin + "'")
+                .add("userPassword='" + userPassword + "'")
                 .add("userName='" + userName + "'")
                 .add("userSurname='" + userSurname + "'")
                 .add("userPhone='" + userPhone + "'")
                 .add("userEmail='" + userEmail + "'")
+                .add("userRoleId=" + userRoleId)
                 .toString();
     }
 }

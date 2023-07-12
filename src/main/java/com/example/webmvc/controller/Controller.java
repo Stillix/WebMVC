@@ -4,8 +4,6 @@ import java.io.*;
 
 import com.example.webmvc.command.Command;
 import com.example.webmvc.command.CommandType;
-import com.example.webmvc.command.impl.AddUserCommand;
-import com.example.webmvc.command.impl.LoginCommand;
 import com.example.webmvc.exception.CommandException;
 import com.example.webmvc.pool.ConnectionPool;
 import jakarta.servlet.ServletException;
@@ -36,8 +34,8 @@ public class Controller extends HttpServlet {
             page = command.execute(request);
             request.getRequestDispatcher(page).forward(request, response);
         } catch (CommandException e) {
-//            response.sendError(500);
-            throw new ServletException(e);
+            //log
+            throw new ServletException(e.getMessage());
 
         }
     }

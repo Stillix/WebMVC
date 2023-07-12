@@ -1,10 +1,7 @@
 package com.example.webmvc.command.impl;
 
 import com.example.webmvc.command.Command;
-import com.example.webmvc.dao.UserDao;
-import com.example.webmvc.dao.impl.UserDaoImpl;
 import com.example.webmvc.entity.User;
-import com.example.webmvc.exception.CommandException;
 import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.UserService;
@@ -18,10 +15,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 import static com.example.webmvc.command.RequestAttributeName.ERROR_MESSAGE;
-import static com.example.webmvc.command.RequestAttributeName.USER;
 import static com.example.webmvc.command.RequestParameterName.*;
 
-public class AddUserCommand implements Command {
+public class RegisterCommand implements Command {
 
     private static Logger logger = LogManager.getLogger();
 
@@ -35,9 +31,8 @@ public class AddUserCommand implements Command {
         String userEmail = request.getParameter(EMAIL);
 
         UserService userService = UserServiceImpl.getInstance();
-        UserDaoImpl userDao = UserDaoImpl.getInstance();
-
         LoginValidatorImpl loginValidator = new LoginValidatorImpl();
+
         try {
             if (userService.isLoginAvailable(userLogin)) {
                 if (loginValidator.isValidLogin(userLogin) && loginValidator.isValidPassword(userPassword)) {
@@ -51,15 +46,16 @@ public class AddUserCommand implements Command {
                             .setUserEmail(userEmail)
                             .setUserRoleId(1)
                             .build();
-                    Optional<User> createdUser = userDao.create(user);
-                    logger.log(Level.INFO, "User was successfully created and added to the database" + user);
+                    Optional<User> createdUser = userService.register(user);
                     if (createdUser.isPresent()) {
+                        logger.log(Level.INFO, "User was successfully created and added to the database" + user);
                         return "/pages/success_register.jsp";
                     } else {
                         request.setAttribute(ERROR_MESSAGE, "Failed to create user");
                         logger.log(Level.ERROR, "Failed to create user");
+                        return "/pages/registration.jsp";
                     }
-                } else {                                                        //pass 8-20+minimum 1 uppercase letter+minimum 1 number
+                } else {                                                        //pass 6-30+minimum 1 uppercase letter+minimum 1 number
                     request.setAttribute(ERROR_MESSAGE, "Invalid login or password format");//login 4-20 symbols letters and numbers
                     logger.log(Level.WARN, "Invalid login or password format");
                 }
@@ -67,7 +63,7 @@ public class AddUserCommand implements Command {
                 request.setAttribute(ERROR_MESSAGE, "Login is already exist");
                 logger.log(Level.INFO, "Login is already exist");
             }
-        } catch (DaoException | ServiceException e) {
+        } catch (ServiceException e) {
             throw new RuntimeException("Failed to execute AddUserCommand", e);
         }
         return "/pages/registration.jsp";

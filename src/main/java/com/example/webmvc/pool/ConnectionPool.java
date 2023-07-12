@@ -26,8 +26,8 @@ public class ConnectionPool {
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
     private static ConnectionPool instance;
 
-    private BlockingQueue<Connection> freeConnections;
-    private Queue<Connection> givenAwayConnections;
+    private BlockingQueue<ProxyConnection> freeConnections;
+    private Queue<ProxyConnection> givenAwayConnections;
 
     static {
         try {
@@ -42,7 +42,8 @@ public class ConnectionPool {
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("database.properties")) {
             prop.load(input);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load database.properties", e);
+            logger.log(Level.ERROR, "Failed to load database.properties");
+            throw new ExceptionInInitializerError(e);
         }
         freeConnections = new LinkedBlockingQueue<>(POOL_SIZE);
         givenAwayConnections = new ArrayDeque<>();
@@ -76,7 +77,7 @@ public class ConnectionPool {
     public Connection getConnection() {
         ProxyConnection proxyConnection = null;
         try {
-            proxyConnection = (ProxyConnection) freeConnections.take();
+            proxyConnection = freeConnections.take();
             logger.log(Level.DEBUG, "Gave connection" + proxyConnection);
             givenAwayConnections.offer(proxyConnection);
         } catch (InterruptedException e) {
@@ -86,17 +87,19 @@ public class ConnectionPool {
         return proxyConnection;
     }
 
-    public void releaseConnection(Connection connection) {
+    public boolean releaseConnection(Connection connection) {
         if (!connection.getClass().equals(ProxyConnection.class)) {
             logger.log(Level.ERROR, "Attempt to release a non-proxy connection ");
-            throw new IllegalArgumentException();
+            return false;
         }
         givenAwayConnections.remove(connection);
         try {
-            freeConnections.put(connection);
+            freeConnections.put((ProxyConnection) connection);
         } catch (InterruptedException e) {
             logger.log(Level.ERROR, "InterruptedException in method releaseConnection " + e.getMessage());
         }
+
+        return true;
     }
 
     public static void deregister() throws SQLException {
@@ -112,8 +115,8 @@ public class ConnectionPool {
     public void destroyPool() {
         for (int i = 0; i < POOL_SIZE; i++) {
             try {
-                ProxyConnection proxyConnection = (ProxyConnection) freeConnections.take();
-                proxyConnection.isReallyClose();
+                ProxyConnection proxyConnection = freeConnections.take();
+                proxyConnection.ReallyClose();
             } catch (InterruptedException e) {
                 logger.error("Failed destroy pool" + e.getMessage());
             }
