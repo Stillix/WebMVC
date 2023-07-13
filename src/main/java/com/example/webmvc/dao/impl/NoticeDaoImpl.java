@@ -22,6 +22,14 @@ public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
     private static final String INSERT_NOTICE = "INSERT INTO notices (title, id_user, id_person, execution_time, reward, id_status, description, publication_date) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
     private static final String UPDATE_NOTICE_WHERE_ID = "UPDATE notice SET title = ?, id_user = ?,id_person= ?,execution_time= ?,reward= ?,id_status= ?,description=?,publication_date=? WHERE id_notice = ?";
     private static final String DELETE_NOTICE_WHERE_ID = "DELETE FROM notice WHERE id_notice = ?";
+    private static NoticeDaoImpl instance = new NoticeDaoImpl();
+
+    private NoticeDaoImpl() {
+    }
+
+    public static NoticeDaoImpl getInstance() {
+        return instance;
+    }
 
     @Override
     public boolean delete(Notice notice) throws DaoException {
