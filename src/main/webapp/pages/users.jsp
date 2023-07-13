@@ -1,33 +1,39 @@
 <%@ page import="com.example.webmvc.entity.User" %>
-<%@ page import="java.util.List" %><%--
-  Created by IntelliJ IDEA.
-  User: tdoro
-  Date: 12.07.2023
-  Time: 22:04
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Users</title>
 </head>
 <body>
-<table>
-    <tr>
-        <th>User ID</th>
-        <th>User Name</th>
-        <th>User Login</th>
-    </tr>
-    <%
-        List<User> userList = (List<User>) request.getAttribute("userList");
-        for (User user : userList) {
-    %>
-    <tr>
-        <td><%= user.getUserId() %></td>
-        <td><%= user.getUserName() %></td>
-        <td><%= user.getUserLogin() %></td>
-    </tr>
-    <% } %>
-</table>
+<form action="/WebMVC_war_exploded/controller" method="post">
+<input type="hidden" name="command" value="show_users">
+<h1>User List</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Password</th>
+            <th>Login</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+        <% for (User user : (List<User>) request.getAttribute("userList")) { %>
+        <tr>
+            <td><%= user.getUserId() %></td>
+            <td><%= user.getUserLogin() %></td>
+            <td><%= user.getUserPassword() %></td>
+            <td><%= user.getUserName() %></td>
+            <td><%= user.getUserSurname() %></td>
+            <td><%= user.getUserPhone() %></td>
+            <td><%= user.getUserEmail() %></td>
+            <td><%= user.getUserRole() %></td>
+        </tr>
+        <% } %>
+    </table>
+
+</form>
 </body>
 </html>

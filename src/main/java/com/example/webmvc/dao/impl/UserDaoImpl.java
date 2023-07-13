@@ -17,11 +17,11 @@ import java.util.Optional;
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static Logger logger = LogManager.getLogger();
     private static final String SELECT_PASSWORD_WHERE_LOGIN = "SELECT password FROM users WHERE login=?";
-    private static final String DELETE_USER_WHERE_ID = "DELETE FROM users WHERE id = ?";
-    private static final String GET_ALL_USERS = "SELECT * FROM users";
-    private static final String GET_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
-    private static final String GET_USER_BY_NAME = "SELECT * FROM users WHERE name = ?";
-    private static final String GET_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
+    private static final String DELETE_USER_WHERE_ID = "DELETE FROM users WHERE id_user = ?";
+    private static final String GET_ALL_USERS = "SELECT id_user, login, password, name, surname, phone, email, role FROM users";
+    private static final String GET_USER_BY_ID = "SELECT id_user, login, password, name, surname, phone, email, role FROM users WHERE id = ?";
+    private static final String GET_USER_BY_NAME = "SELECT id_user, login, password, name, surname, phone, email, role FROM users WHERE name = ?";
+    private static final String GET_USER_BY_LOGIN = "SELECT id_user, login, password, name, surname, phone, email, role FROM users WHERE login = ?";
     private static final String INSERT_USER = "INSERT INTO users (login, password,name,surname,phone,email,id_role) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_USER_WHERE_ID = "UPDATE users SET login = ?, password = ?,name= ?,surname= ?,phone= ?,email= ?,id_role=? WHERE id = ?";
 
@@ -50,13 +50,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public boolean update(User user) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_USER_WHERE_ID)) {
-            statement.setString(1, user.getUserLogin());
-            statement.setString(2, user.getUserPassword());
-            statement.setString(3, user.getUserName());
-            statement.setString(4, user.getUserSurname());
-            statement.setString(5, user.getUserPhone());
-            statement.setString(6, user.getUserEmail());
-            statement.setInt(7, user.getUserRoleId());
+            setStatementParameters(statement, user);
             int rowsUpdated = statement.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException e) {
@@ -68,14 +62,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public Optional<User> create(User user) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, user.getUserLogin());
-            statement.setString(2, user.getUserPassword());
-            statement.setString(3, user.getUserName());
-            statement.setString(4, user.getUserSurname());
-            statement.setString(5, user.getUserPhone());
-            statement.setString(6, user.getUserEmail());
-            statement.setInt(7, user.getUserRoleId());
-
+            setStatementParameters(statement, user);
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                 ResultSet resultSet = statement.getGeneratedKeys();
@@ -89,7 +76,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                             .setUserSurname(user.getUserSurname())
                             .setUserPhone(user.getUserPhone())
                             .setUserEmail(user.getUserEmail())
-                            .setUserRoleId(user.getUserRoleId())
+                            .setUserRole(user.getUserRole())
                             .build();
                     return Optional.of(createdUser);
                 }
@@ -107,24 +94,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
              PreparedStatement statement = connection.prepareStatement(GET_ALL_USERS);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                int userId = resultSet.getInt(1);
-                String userLogin = resultSet.getString(2);
-                String userPassword = resultSet.getString(3);
-                String userName = resultSet.getString(4);
-                String userSurname = resultSet.getString(5);
-                String userPhone = resultSet.getString(6);
-                String userEmail = resultSet.getString(7);
-                int userRoleId = resultSet.getInt(8);
-                User createdUser = User.newBuilder()
-                        .setUserId(userId)
-                        .setUserLogin(userLogin)
-                        .setUserPassword(userPassword)
-                        .setUserName(userName)
-                        .setUserSurname(userSurname)
-                        .setUserPhone(userPhone)
-                        .setUserEmail(userEmail)
-                        .setUserRoleId(userRoleId)
-                        .build();
+                UserMapperImpl userMapper = new UserMapperImpl();
+                User createdUser = userMapper.buildEntity(resultSet);
                 userList.add(createdUser);
             }
         } catch (SQLException e) {
@@ -140,25 +111,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    int userId = resultSet.getInt(1);
-                    String userLogin = resultSet.getString(2);
-                    String userPassword = resultSet.getString(3);
-                    String userName = resultSet.getString(4);
-                    String userSurname = resultSet.getString(5);
-                    String userPhone = resultSet.getString(6);
-                    String userEmail = resultSet.getString(7);
-                    int userRoleId = resultSet.getInt(8);
-                    User createdUser = User.newBuilder()
-                            .setUserId(userId)
-                            .setUserLogin(userLogin)
-                            .setUserPassword(userPassword)
-                            .setUserName(userName)
-                            .setUserSurname(userSurname)
-                            .setUserPhone(userPhone)
-                            .setUserEmail(userEmail)
-                            .setUserRoleId(userRoleId)
-                            .build();
-                    return Optional.of(createdUser);
+                    UserMapperImpl userMapper = new UserMapperImpl();
+                    return Optional.ofNullable(userMapper.buildEntity(resultSet));
                 }
             }
         } catch (SQLException e) {
@@ -174,25 +128,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setString(1, username);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    int userId = resultSet.getInt(1);
-                    String userLogin = resultSet.getString(2);
-                    String userPassword = resultSet.getString(3);
-                    String userName = resultSet.getString(4);
-                    String userSurname = resultSet.getString(5);
-                    String userPhone = resultSet.getString(6);
-                    String userEmail = resultSet.getString(7);
-                    int userRoleId = resultSet.getInt(8);
-                    User createdUser = User.newBuilder()
-                            .setUserId(userId)
-                            .setUserLogin(userLogin)
-                            .setUserPassword(userPassword)
-                            .setUserName(userName)
-                            .setUserSurname(userSurname)
-                            .setUserPhone(userPhone)
-                            .setUserEmail(userEmail)
-                            .setUserRoleId(userRoleId)
-                            .build();
-                    return Optional.of(createdUser);
+                    UserMapperImpl userMapper = new UserMapperImpl();
+                    return Optional.ofNullable(userMapper.buildEntity(resultSet));
                 }
             }
         } catch (SQLException e) {
@@ -235,5 +172,15 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             throw new DaoException(e);
         }
         return match;
+    }
+
+    private void setStatementParameters(PreparedStatement statement, User user) throws SQLException {
+        statement.setString(1, user.getUserLogin());
+        statement.setString(2, user.getUserPassword());
+        statement.setString(3, user.getUserName());
+        statement.setString(4, user.getUserSurname());
+        statement.setString(5, user.getUserPhone());
+        statement.setString(6, user.getUserEmail());
+        statement.setString(7, user.getUserRole());
     }
 }

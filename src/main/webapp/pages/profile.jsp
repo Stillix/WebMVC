@@ -15,9 +15,13 @@ Hello, (forward) = ${user}
 <br><br><br>
 Hi (redirect/forward) = ${user_name}
 <br>
-<form action="controller">
+<form action="controller"  method="post">
   <input type="hidden" name="command" value="logout">
-<input type="submit" value="Logout">
+  <input type="submit" value="Logout" style="font-weight: bold; font-size: 18px; padding: 10px;">
+</form>
+<form action="controller"  method="post">
+  <input type="hidden" name="command" value="show_users">
+  <input type="submit" value="show users" style="font-weight: bold; font-size: 18px; padding: 10px;">
 </form>
 </body>
 </html>

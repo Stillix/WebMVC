@@ -44,7 +44,7 @@ public class RegisterCommand implements Command {
                             .setUserSurname(userSurname)
                             .setUserPhone(userPhone)
                             .setUserEmail(userEmail)
-                            .setUserRoleId(1)
+                            .setUserRole("user")
                             .build();
                     Optional<User> createdUser = userService.register(user);
                     if (createdUser.isPresent()) {

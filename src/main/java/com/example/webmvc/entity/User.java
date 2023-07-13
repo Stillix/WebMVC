@@ -11,7 +11,7 @@ public class User extends AbstractEntity {
     private String userSurname;
     private String userPhone;
     private String userEmail;
-    private int userRoleId;
+    private String userRole;
 
     private User() {
     }
@@ -44,8 +44,8 @@ public class User extends AbstractEntity {
         return userEmail;
     }
 
-    public int getUserRoleId() {
-        return userRoleId;
+    public String getUserRole() {
+        return userRole;
     }
 
     public static Builder newBuilder() {
@@ -93,8 +93,8 @@ public class User extends AbstractEntity {
             return this;
         }
 
-        public Builder setUserRoleId(int userRoleId) {
-            User.this.userRoleId = userRoleId;
+        public Builder setUserRole(String userRole) {
+            User.this.userRole = userRole;
             return this;
         }
         public User build() {
@@ -124,7 +124,7 @@ public class User extends AbstractEntity {
                 .add("userSurname='" + userSurname + "'")
                 .add("userPhone='" + userPhone + "'")
                 .add("userEmail='" + userEmail + "'")
-                .add("userRoleId=" + userRoleId)
+                .add("userRole=" + userRole)
                 .toString();
     }
 }

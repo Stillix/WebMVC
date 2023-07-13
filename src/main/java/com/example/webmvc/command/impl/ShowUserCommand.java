@@ -18,9 +18,10 @@ public class ShowUserCommand implements Command {
         try {
             List<User> userList = userService.findAll();
             request.setAttribute("userList", userList);
-            return "/pages/users.jsp";
         } catch (ServiceException e) {
-            throw new CommandException("Failed to retrieve user list", e);
+            throw new CommandException(e);
+
         }
+        return "/pages/users.jsp";
     }
 }
