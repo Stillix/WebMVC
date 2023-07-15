@@ -12,6 +12,8 @@ import jakarta.servlet.annotation.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.example.webmvc.command.RequestParameterName.COMMAND;
+
 @WebServlet(name = "controller", urlPatterns = {"/controller", "*.do"})
 public class Controller extends HttpServlet {
     private static Logger logger = LogManager.getLogger();
@@ -27,7 +29,7 @@ public class Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
-        String commandStr = request.getParameter("command");
+        String commandStr = request.getParameter(COMMAND);
         Command command = CommandType.defineCommand(commandStr);
         String page;
         try {

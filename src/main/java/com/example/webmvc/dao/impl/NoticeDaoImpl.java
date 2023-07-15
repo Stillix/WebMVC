@@ -3,10 +3,8 @@ package com.example.webmvc.dao.impl;
 import com.example.webmvc.dao.BaseDao;
 import com.example.webmvc.dao.NoticeDao;
 import com.example.webmvc.entity.Notice;
-import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.mapper.impl.NoticeMapperImpl;
-import com.example.webmvc.mapper.impl.UserMapperImpl;
 import com.example.webmvc.pool.ConnectionPool;
 
 import java.sql.*;
@@ -15,10 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
-    private static final String GET_INFO_PERSON = "SELECT id_notice,title, id_user, id_person, execution_time, reward, id_status, description, publication_date FROM notices WHERE id_person = ?";
-    private static final String GET_BY_STATUS = "SELECT id_notice,title, id_user, id_person, execution_time, reward, id_status, description, publication_date FROM notices WHERE id_status = ?";
-    private static final String GET_NOTICE_BY_USERNAME = "SELECT notices.id_notice,notices.title, notices.id_user, notices.id_person, notices.execution_time, notices.reward, notices.id_status, notices.description, notices.publication_date FROM notices WHERE noticesid_user IN (SELECT id_user FROM users WHERE surname = ?);";
-    private static final String GET_ALL_NOTICES = "SELECT id_notice,title, id_user, id_person, execution_time, reward, id_status, description, publication_date FROM notices";
+    private static final String SELECT_NOTICE_BY_SURNAME_PERSON = "SELECT notices.id_notice,notices.title, notices.id_user, notices.id_person, notices.execution_time, notices.reward, notices.id_status, notices.description, notices.publication_date FROM notices WHERE notices.id_person IN (SELECT id_person FROM persons WHERE surname = ?);";
+    private static final String SELECT_NOTICE_BY_USERNAME = "SELECT notices.id_notice,notices.title, notices.id_user, notices.id_person, notices.execution_time, notices.reward, notices.id_status, notices.description, notices.publication_date FROM notices WHERE notices.id_user IN (SELECT id_user FROM users WHERE surname = ?)";
+    private static final String SELECT_ALL_NOTICES = "SELECT id_notice,title, id_user, id_person, execution_time, reward, id_status, description, publication_date FROM notices";
     private static final String INSERT_NOTICE = "INSERT INTO notices (title, id_user, id_person, execution_time, reward, id_status, description, publication_date) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
     private static final String UPDATE_NOTICE_WHERE_ID = "UPDATE notice SET title = ?, id_user = ?,id_person= ?,execution_time= ?,reward= ?,id_status= ?,description=?,publication_date=? WHERE id_notice = ?";
     private static final String DELETE_NOTICE_WHERE_ID = "DELETE FROM notice WHERE id_notice = ?";
@@ -32,12 +29,12 @@ public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
     }
 
     @Override
-    public boolean delete(Notice notice) throws DaoException {
+    public boolean delete(int noticeId) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_NOTICE_WHERE_ID)) {
-            statement.setInt(1, notice.getUserId());
+            statement.setInt(1, noticeId);
             int rowsDeleted = statement.executeUpdate();
-            return rowsDeleted > 0;
+            return (rowsDeleted > 0);
         } catch (SQLException e) {
             throw new DaoException(e.getMessage());
         }
@@ -48,8 +45,9 @@ public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_NOTICE_WHERE_ID)) {
             setStatementParameters(statement, notice);
+            statement.setInt(9, notice.getNoticeId());
             int rowsUpdated = statement.executeUpdate();
-            return rowsUpdated > 0;
+            return (rowsUpdated > 0);
         } catch (SQLException e) {
             throw new DaoException(e.getMessage());
         }
@@ -89,7 +87,7 @@ public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
     public List findAll() throws DaoException {
         List<Notice> userList = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_ALL_NOTICES);
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_NOTICES);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 NoticeMapperImpl noticeMapper = new NoticeMapperImpl();
@@ -103,28 +101,10 @@ public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
     }
 
     @Override
-    public Optional<Notice> findNoticeByStatus(int id) throws DaoException {
+    public Optional<Notice> findNoticeByPerson(String surname) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_BY_STATUS)) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                NoticeMapperImpl noticeMapper = new NoticeMapperImpl();
-                Notice notice = noticeMapper.buildEntity(resultSet);
-                return Optional.ofNullable(notice);
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e.getMessage());
-        }
-
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Notice> findNoticeByPerson(int id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_INFO_PERSON)) {
-            statement.setInt(1, id);
+             PreparedStatement statement = connection.prepareStatement(SELECT_NOTICE_BY_SURNAME_PERSON)) {
+            statement.setString(1, surname);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 NoticeMapperImpl noticeMapper = new NoticeMapperImpl();
@@ -139,7 +119,7 @@ public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
     @Override
     public Optional<Notice> findNoticeByName(String username) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_NOTICE_BY_USERNAME)) {
+             PreparedStatement statement = connection.prepareStatement(SELECT_NOTICE_BY_USERNAME)) {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {

@@ -7,12 +7,16 @@ import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.UserService;
 import com.example.webmvc.validator.impl.LoginValidatorImpl;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import java.util.List;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
+    private static Logger logger = LogManager.getLogger();
     private static UserServiceImpl instance = new UserServiceImpl();
     UserDaoImpl userDao = UserDaoImpl.getInstance();
     LoginValidatorImpl loginValidator = new LoginValidatorImpl();
@@ -39,7 +43,8 @@ public class UserServiceImpl implements UserService {
         boolean match = false;
         try {
             if (loginValidator.isValidLogin(login) && loginValidator.isValidPassword(password)) {
-                match = userDao.authenticate(login, password);
+                String digest = DigestUtils.md5Hex(password);
+                match = userDao.authenticate(login, digest);
             }
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -47,18 +52,31 @@ public class UserServiceImpl implements UserService {
         return match;
     }
 
+
     @Override
     public Optional<User> register(User user) throws ServiceException {
-        try {
+        if (isLoginAvailable(user.getUserLogin())) {
             if (loginValidator.isValidLogin(user.getUserLogin()) && loginValidator.isValidPassword(user.getUserPassword())) {
-                userDao.create(user);
+                String digest = DigestUtils.md5Hex(user.getUserPassword());
+                user.setUserPassword(digest);
+                try {
+                    userDao.create(user);
+                } catch (DaoException e) {
+                    throw new ServiceException("Failed to register user" + e);
+                }
+                logger.info("Пароль шифрованный: " + user.getUserPassword());
+                return Optional.of(user);
             } else {
-                return Optional.empty();
+                return getUser("Invalid login or password format");
             }
-            return Optional.of(user);
-        } catch (DaoException e) {
-            throw new ServiceException("User creation error", e);
+        } else {
+            return getUser("Login is already exist");
         }
+    }
+
+    private static Optional<User> getUser(String errorMessage) {
+        User errorUser = User.newBuilder().setErrorMessage(errorMessage).build();
+        return Optional.of(errorUser);
     }
 
     @Override
@@ -86,5 +104,35 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    @Override
+    public boolean deleteUser(int userId) throws ServiceException {
+        boolean match;
+        try {
+            if (userDao.delete(userId)) {
+                match = true;
+            } else {
+                match = false;
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return match;
+    }
+
+    @Override
+    public boolean updateUser(User user) throws ServiceException {
+        boolean match;
+        try {
+            if (userDao.update(user)) {
+                match = true;
+            } else {
+                match = false;
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return match;
     }
 }

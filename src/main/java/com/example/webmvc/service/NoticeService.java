@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NoticeService {
-    boolean deleteNotice(Notice notice) throws ServiceException;
+
+    boolean deleteNotice(int noticeId) throws ServiceException;
 
     boolean updateNotice(Notice notice) throws ServiceException;
 
@@ -16,9 +17,7 @@ public interface NoticeService {
 
     List findAllNotice() throws ServiceException;
 
-    Optional<Notice> findNoticeByStatus(int id) throws ServiceException;
-
-    Optional<Notice> findNoticeByPerson(int id) throws ServiceException;
+    Optional<Notice> findNoticeByPerson(String personName) throws ServiceException;
 
     Optional<Notice> findNoticeByName(String username) throws ServiceException;
 

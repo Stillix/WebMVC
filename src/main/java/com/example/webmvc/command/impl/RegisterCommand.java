@@ -2,11 +2,12 @@ package com.example.webmvc.command.impl;
 
 import com.example.webmvc.command.Command;
 import com.example.webmvc.entity.User;
+import com.example.webmvc.exception.CommandException;
 import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.UserService;
 import com.example.webmvc.service.impl.UserServiceImpl;
-import com.example.webmvc.validator.impl.LoginValidatorImpl;
+import com.mysql.cj.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -22,51 +23,44 @@ public class RegisterCommand implements Command {
     private static Logger logger = LogManager.getLogger();
 
     @Override
-    public String execute(HttpServletRequest request) {
+    public String execute(HttpServletRequest request) throws CommandException {
+        int userId = 0;
         String userLogin = request.getParameter(LOGIN);
         String userPassword = request.getParameter(PASSWORD);
         String userName = request.getParameter(NAME);
         String userSurname = request.getParameter(SURNAME);
         String userPhone = request.getParameter(PHONE);
         String userEmail = request.getParameter(EMAIL);
-
         UserService userService = UserServiceImpl.getInstance();
-        LoginValidatorImpl loginValidator = new LoginValidatorImpl();
-
+        logger.log(Level.INFO, "Executing RegisterCommand");
         try {
-            if (userService.isLoginAvailable(userLogin)) {
-                if (loginValidator.isValidLogin(userLogin) && loginValidator.isValidPassword(userPassword)) {
-                    User user = User.newBuilder()
-                            .setUserId(0)
-                            .setUserLogin(userLogin)
-                            .setUserPassword(userPassword)
-                            .setUserName(userName)
-                            .setUserSurname(userSurname)
-                            .setUserPhone(userPhone)
-                            .setUserEmail(userEmail)
-                            .setUserRole("user")
-                            .build();
-                    Optional<User> createdUser = userService.register(user);
-                    if (createdUser.isPresent()) {
-                        logger.log(Level.INFO, "User was successfully created and added to the database" + user);
-                        return "/pages/success_register.jsp";
-                    } else {
-                        request.setAttribute(ERROR_MESSAGE, "Failed to create user");
-                        logger.log(Level.ERROR, "Failed to create user");
-                        return "/pages/registration.jsp";
-                    }
-                } else {                                                        //pass 6-30+minimum 1 uppercase letter+minimum 1 number
-                    request.setAttribute(ERROR_MESSAGE, "Invalid login or password format");//login 4-20 symbols letters and numbers
-                    logger.log(Level.WARN, "Invalid login or password format");
+            User user = User.newBuilder()
+                    .setUserId(userId)
+                    .setUserLogin(userLogin)
+                    .setUserPassword(userPassword)
+                    .setUserName(userName)
+                    .setUserSurname(userSurname)
+                    .setUserPhone(userPhone)
+                    .setUserEmail(userEmail)
+                    .setUserRole("client")
+                    .build();
+            Optional<User> createdUser = userService.register(user);
+            if (createdUser.isPresent()) {
+                String errorMessage = createdUser.get().getErrorMessage();
+                if (errorMessage == null || errorMessage.isEmpty()) {
+                    logger.log(Level.INFO, "User was successfully created and added to the database: " + user);
+                    return "/pages/success_register.jsp";
+                } else {
+                    request.setAttribute(ERROR_MESSAGE, errorMessage);
+                    logger.log(Level.WARN, errorMessage);
                 }
-            } else {
-                request.setAttribute(ERROR_MESSAGE, "Login is already exist");
-                logger.log(Level.INFO, "Login is already exist");
             }
         } catch (ServiceException e) {
-            throw new RuntimeException("Failed to execute AddUserCommand", e);
+            logger.log(Level.ERROR, "Except");
+            throw new CommandException(e);
         }
         return "/pages/registration.jsp";
     }
+
 }
 

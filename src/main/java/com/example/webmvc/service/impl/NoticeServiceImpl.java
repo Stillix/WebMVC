@@ -13,10 +13,10 @@ public class NoticeServiceImpl implements NoticeService {
     private static NoticeDaoImpl noticeDao = NoticeDaoImpl.getInstance();
 
     @Override
-    public boolean deleteNotice(Notice notice) throws ServiceException {
+    public boolean deleteNotice(int noticeId) throws ServiceException {
         boolean match;
         try {
-            if (noticeDao.delete(notice)) {
+            if (noticeDao.delete(noticeId)) {
                 match = true;
             } else {
                 match = false;
@@ -63,18 +63,9 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public Optional<Notice> findNoticeByStatus(int id) throws ServiceException {
+    public Optional<Notice> findNoticeByPerson(String username) throws ServiceException {
         try {
-            return noticeDao.findNoticeByStatus(id);
-        } catch (DaoException e) {
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-    @Override
-    public Optional<Notice> findNoticeByPerson(int id) throws ServiceException {
-        try {
-            return noticeDao.findNoticeByPerson(id);
+            return noticeDao.findNoticeByPerson(username);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage());
         }

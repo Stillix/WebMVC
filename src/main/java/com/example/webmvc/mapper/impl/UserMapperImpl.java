@@ -21,7 +21,6 @@ public class UserMapperImpl implements Mapper<User> {
     public User buildEntity(ResultSet resultSet) throws SQLException {
         int userId = resultSet.getInt(ID_USER);
         String userLogin = resultSet.getString(LOGIN);
-        String userPassword = resultSet.getString(PASSWORD);
         String userName = resultSet.getString(NAME);
         String userSurname = resultSet.getString(SURNAME);
         String userPhone = resultSet.getString(PHONE);
@@ -30,7 +29,6 @@ public class UserMapperImpl implements Mapper<User> {
         return User.newBuilder()
                 .setUserId(userId)
                 .setUserLogin(userLogin)
-                .setUserPassword(userPassword)
                 .setUserName(userName)
                 .setUserSurname(userSurname)
                 .setUserPhone(userPhone)

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public abstract class BaseDao<T extends AbstractEntity> {
 
-    public abstract boolean delete(T t) throws DaoException;
+    public abstract boolean delete(int id) throws DaoException;
 
     public abstract boolean update(T t) throws DaoException;
 

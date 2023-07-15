@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-public class NoticeMapperImpl implements Mapper {
+public class NoticeMapperImpl implements Mapper<Notice> {
 
     public static final String ID_NOTICE = "id_notice";
     public static final String TITLE = "title";

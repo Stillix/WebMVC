@@ -12,7 +12,6 @@
     <table>
         <tr>
             <th>ID</th>
-            <th>Password</th>
             <th>Login</th>
             <th>Name</th>
             <th>Surname</th>
@@ -24,7 +23,6 @@
         <tr>
             <td><%= user.getUserId() %></td>
             <td><%= user.getUserLogin() %></td>
-            <td><%= user.getUserPassword() %></td>
             <td><%= user.getUserName() %></td>
             <td><%= user.getUserSurname() %></td>
             <td><%= user.getUserPhone() %></td>

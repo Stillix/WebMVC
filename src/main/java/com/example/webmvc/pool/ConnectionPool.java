@@ -20,11 +20,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
     private static Logger logger = LogManager.getLogger();
+    private static ConnectionPool instance;
     private static final int POOL_SIZE = 8;
 
     private static Lock lock = new ReentrantLock(true);
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
-    private static ConnectionPool instance;
+
 
     private BlockingQueue<ProxyConnection> freeConnections;
     private Queue<ProxyConnection> givenAwayConnections;
@@ -33,7 +34,8 @@ public class ConnectionPool {
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+           logger.log(Level.ERROR,"");
+            throw new ExceptionInInitializerError(e.getMessage());
         }
     }
 
@@ -42,7 +44,7 @@ public class ConnectionPool {
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("database.properties")) {
             prop.load(input);
         } catch (IOException e) {
-            logger.log(Level.ERROR, "Failed to load database.properties");
+            logger.log(Level.FATAL, "Failed to load database.properties");
             throw new ExceptionInInitializerError(e);
         }
         freeConnections = new LinkedBlockingQueue<>(POOL_SIZE);
@@ -116,7 +118,7 @@ public class ConnectionPool {
         for (int i = 0; i < POOL_SIZE; i++) {
             try {
                 ProxyConnection proxyConnection = freeConnections.take();
-                proxyConnection.ReallyClose();
+                proxyConnection.reallyClose();
             } catch (InterruptedException e) {
                 logger.error("Failed destroy pool" + e.getMessage());
             }

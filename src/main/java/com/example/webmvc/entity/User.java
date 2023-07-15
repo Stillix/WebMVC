@@ -52,10 +52,18 @@ public class User extends AbstractEntity {
         return new User().new Builder();
     }
 
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
 
     public class Builder {
 
         private Builder() {
+        }
+
+        public Builder setErrorMessage(String errorMessage) {
+            User.this.errorMessage = errorMessage;
+            return this;
         }
 
         public Builder setUserId(int userId) {
@@ -97,10 +105,12 @@ public class User extends AbstractEntity {
             User.this.userRole = userRole;
             return this;
         }
+
         public User build() {
             return User.this;
         }
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

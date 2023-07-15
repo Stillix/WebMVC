@@ -7,11 +7,10 @@ import com.example.webmvc.exception.DaoException;
 import java.util.Optional;
 
 public interface NoticeDao {
-    Optional<Notice> findNoticeByStatus(int id) throws DaoException;
 
-    Optional<Notice> findNoticeByPerson(int id) throws DaoException;
+    Optional<Notice> findNoticeByPerson(String personName) throws DaoException;
 
-    Optional<Notice> findNoticeByName(String username) throws DaoException;
+    Optional<Notice> findNoticeByName(String userName) throws DaoException;
 
 
 }

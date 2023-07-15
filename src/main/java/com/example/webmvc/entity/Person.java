@@ -9,16 +9,9 @@ public class Person extends AbstractEntity {
     private String personSurname;
     private int personAge;
     private String description;
-    private int PersonStatusId;
-    private Person(){
-    }
-    public Person(int personId, String personName, String personSurname, int personAge, String description, int personStatusId) {
-        this.personId = personId;
-        this.personName = personName;
-        this.personSurname = personSurname;
-        this.personAge = personAge;
-        this.description = description;
-        PersonStatusId = personStatusId;
+    private String personStatus;
+
+    private Person() {
     }
 
     public int getPersonId() {
@@ -41,8 +34,8 @@ public class Person extends AbstractEntity {
         return description;
     }
 
-    public int getPersonStatusId() {
-        return PersonStatusId;
+    public String getPersonStatus() {
+        return personStatus;
     }
 
     public static Builder newBuilder() {
@@ -55,44 +48,52 @@ public class Person extends AbstractEntity {
         private Builder() {
         }
 
-        public void setPersonId(int personId) {
+        public Builder setPersonId(int personId) {
             Person.this.personId = personId;
+            return this;
         }
 
-        public void setPersonName(String personName) {
+        public Builder setPersonName(String personName) {
             Person.this.personName = personName;
+            return this;
         }
 
-        public void setPersonSurname(String personSurname) {
+        public Builder setPersonSurname(String personSurname) {
             Person.this.personSurname = personSurname;
+            return this;
         }
 
-        public void setPersonAge(int personAge) {
+        public Builder setPersonAge(int personAge) {
             Person.this.personAge = personAge;
+            return this;
         }
 
-        public void setDescription(String description) {
+        public Builder setDescription(String description) {
             Person.this.description = description;
+            return this;
         }
 
-        public void setPersonStatusId(int personStatusId) {
-            Person.this.PersonStatusId = personStatusId;
+        public Builder setPersonStatus(String personStatus) {
+            Person.this.personStatus = personStatus;
+            return this;
         }
+
         public Person build() {
             return Person.this;
         }
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return personId == person.personId && personAge == person.personAge && PersonStatusId == person.PersonStatusId && Objects.equals(personName, person.personName) && Objects.equals(personSurname, person.personSurname) && Objects.equals(description, person.description);
+        return personId == person.personId && personAge == person.personAge && personStatus == person.personStatus && Objects.equals(personName, person.personName) && Objects.equals(personSurname, person.personSurname) && Objects.equals(description, person.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(personId, personName, personSurname, personAge, description, PersonStatusId);
+        return Objects.hash(personId, personName, personSurname, personAge, description, personStatus);
     }
 
     @Override
@@ -103,7 +104,7 @@ public class Person extends AbstractEntity {
                 .add("personSurname='" + personSurname + "'")
                 .add("personAge=" + personAge)
                 .add("description='" + description + "'")
-                .add("PersonStatusId=" + PersonStatusId)
+                .add("personStatus=" + personStatus)
                 .toString();
     }
 }
