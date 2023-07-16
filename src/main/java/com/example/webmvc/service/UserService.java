@@ -13,9 +13,7 @@ public interface UserService {
 
     Optional<User> register(User user) throws ServiceException;
 
-    Optional<User> findUserByName(String username) throws ServiceException;
-
-    Optional<User> findUserByLogin(String login) throws ServiceException;
+    List<User> findUserByName(String username) throws ServiceException;
 
     List<User> findAll() throws ServiceException;
 

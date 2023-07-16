@@ -1,6 +1,7 @@
 package com.example.webmvc.service.impl;
 
 import com.example.webmvc.dao.impl.NoticeDaoImpl;
+
 import com.example.webmvc.entity.Notice;
 import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
@@ -11,6 +12,15 @@ import java.util.Optional;
 
 public class NoticeServiceImpl implements NoticeService {
     private static NoticeDaoImpl noticeDao = NoticeDaoImpl.getInstance();
+    private static NoticeServiceImpl instance = new NoticeServiceImpl();
+
+
+    private NoticeServiceImpl() {
+    }
+
+    public static NoticeServiceImpl getInstance() {
+        return instance;
+    }
 
     @Override
     public boolean deleteNotice(int noticeId) throws ServiceException {

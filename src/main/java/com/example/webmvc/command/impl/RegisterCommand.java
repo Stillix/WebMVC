@@ -33,17 +33,17 @@ public class RegisterCommand implements Command {
         String userEmail = request.getParameter(EMAIL);
         UserService userService = UserServiceImpl.getInstance();
         logger.log(Level.INFO, "Executing RegisterCommand");
+        User user = User.newBuilder()
+                .setUserId(userId)
+                .setUserLogin(userLogin)
+                .setUserPassword(userPassword)
+                .setUserName(userName)
+                .setUserSurname(userSurname)
+                .setUserPhone(userPhone)
+                .setUserEmail(userEmail)
+                .setUserRole("client")
+                .build();
         try {
-            User user = User.newBuilder()
-                    .setUserId(userId)
-                    .setUserLogin(userLogin)
-                    .setUserPassword(userPassword)
-                    .setUserName(userName)
-                    .setUserSurname(userSurname)
-                    .setUserPhone(userPhone)
-                    .setUserEmail(userEmail)
-                    .setUserRole("client")
-                    .build();
             Optional<User> createdUser = userService.register(user);
             if (createdUser.isPresent()) {
                 String errorMessage = createdUser.get().getErrorMessage();

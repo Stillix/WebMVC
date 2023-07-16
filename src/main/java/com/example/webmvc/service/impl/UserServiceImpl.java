@@ -80,18 +80,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findUserByName(String username) throws ServiceException {
+    public List<User> findUserByName(String username) throws ServiceException {
         try {
-            return userDao.findUserByName(username);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public Optional<User> findUserByLogin(String login) throws ServiceException {
-        try {
-            return userDao.findUserByLogin(login);
+            List<User> userList = userDao.findUserByName(username);
+            return userList;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

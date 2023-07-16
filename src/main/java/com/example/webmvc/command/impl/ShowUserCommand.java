@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
+import static com.example.webmvc.command.RequestAttributeName.USER_LIST;
+
 public class ShowUserCommand implements Command {
 
     @Override
@@ -17,7 +19,7 @@ public class ShowUserCommand implements Command {
         UserService userService = UserServiceImpl.getInstance();
         try {
             List<User> userList = userService.findAll();
-            request.setAttribute("userList", userList);
+            request.setAttribute(USER_LIST, userList);
         } catch (ServiceException e) {
             throw new CommandException(e);
 

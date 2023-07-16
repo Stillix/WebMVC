@@ -101,20 +101,22 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByName(String username) throws DaoException {
+    public List<User> findUserByName(String username) throws DaoException {
+        List<User> userList = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_USER_BY_NAME)) {
             statement.setString(1, username);
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     UserMapperImpl userMapper = new UserMapperImpl();
-                    return Optional.of(userMapper.buildEntity(resultSet));
+                    User user = userMapper.buildEntity(resultSet);
+                    userList.add(user);
                 }
             }
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return Optional.empty();
+        return userList;
     }
 
     @Override
