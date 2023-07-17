@@ -18,8 +18,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private static Logger logger = LogManager.getLogger();
     private static UserServiceImpl instance = new UserServiceImpl();
-    UserDaoImpl userDao = UserDaoImpl.getInstance();
-    LoginValidatorImpl loginValidator = new LoginValidatorImpl();
+    private static  UserDaoImpl userDao = UserDaoImpl.getInstance();
+    private static  LoginValidatorImpl loginValidator = new LoginValidatorImpl();
 
     private UserServiceImpl() {
     }
