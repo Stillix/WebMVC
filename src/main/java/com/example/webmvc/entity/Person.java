@@ -10,8 +10,13 @@ public class Person extends AbstractEntity {
     private int personAge;
     private String description;
     private String personStatus;
+    private int titleId;
 
     private Person() {
+    }
+
+    public int getTitleId() {
+        return titleId;
     }
 
     public int getPersonId() {
@@ -52,7 +57,10 @@ public class Person extends AbstractEntity {
             Person.this.personId = personId;
             return this;
         }
-
+        public Builder setTitleId(int titleId) {
+            Person.this.titleId = titleId;
+            return this;
+        }
         public Builder setPersonName(String personName) {
             Person.this.personName = personName;
             return this;

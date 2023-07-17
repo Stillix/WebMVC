@@ -31,22 +31,27 @@ public class CreateNoticeCommand implements Command {
         int noticeId = 0;
         long now = System.currentTimeMillis();
         String title = request.getParameter(TITLE);
-        int personId = Integer.parseInt(request.getParameter(ID_PERSON));
+        String name = request.getParameter(NAME);
+        String surname = request.getParameter(SURNAME);
+        int age = Integer.parseInt(request.getParameter(AGE));
+        String personStatus = request.getParameter(PERSON_STATUS);
+        String description = request.getParameter(DESCRIPTION);
         int executionTime = Integer.parseInt(request.getParameter(EXECUTION_TIME));
         int reward = Integer.parseInt(request.getParameter(REWARD));
-        int statusId = Integer.parseInt(request.getParameter(ID_STATUS));
-        String description = request.getParameter(DESCRIPTION);
         Timestamp publicationDate = new Timestamp(now);
         NoticeService noticeService = NoticeServiceImpl.getInstance();
         Notice notice = Notice.newBuilder()
                 .setNoticeId(noticeId)
                 .setTitle(title)
-               // .setUserId()
-                .setPersonId(personId)
+                .setUserId(0)
+                .setNamePerson(name)
+                .setSurnamePerson(surname)
+                .setAge(age)
+                .setDescription(description)
+                .setPersonStatus(personStatus)
                 .setExecutionTime(executionTime)
                 .setReward(reward)
-                .setStatusId(statusId)
-                .setDescription(description)
+                .setStatusId(1)
                 .setPublicationDateTime(publicationDate)
                 .build();
         try {

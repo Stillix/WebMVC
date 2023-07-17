@@ -12,9 +12,10 @@ public final class RequestParameterName {
     public static final String USER_ID = "user_id";
     public static final String TITLE = "title";
     public static final String ID_USER = "id_user";
-    public static final String ID_PERSON = "id_person";
     public static final String EXECUTION_TIME = "execution_time";
+    public static final String PERSON_STATUS = "person_status";
     public static final String REWARD = "reward";
+    public static final String AGE = "age";
     public static final String ID_STATUS = "id_status";
     public static final String DESCRIPTION = "description";
     public static final String PUBLICATION_DATE = "publication_date";

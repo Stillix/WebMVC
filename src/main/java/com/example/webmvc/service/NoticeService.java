@@ -17,8 +17,8 @@ public interface NoticeService {
 
     List findAllNotice() throws ServiceException;
 
-    Optional<Notice> findNoticeByPerson(String personName) throws ServiceException;
+    List<Notice> findNoticeByPerson(String surname) throws ServiceException;
 
-    Optional<Notice> findNoticeByName(String username) throws ServiceException;
+    List<Notice> findNoticeByName(String username) throws ServiceException;
 
 }

@@ -73,20 +73,22 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public Optional<Notice> findNoticeByPerson(String username) throws ServiceException {
+    public List<Notice> findNoticeByPerson(String surname) throws ServiceException {
         try {
-            return noticeDao.findNoticeByPerson(username);
+            List<Notice> noticeList = noticeDao.findNoticeByPerson(surname);
+            return noticeList;
         } catch (DaoException e) {
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException(e);
         }
     }
 
     @Override
-    public Optional<Notice> findNoticeByName(String username) throws ServiceException {
+    public List<Notice> findNoticeByName(String username) throws ServiceException {
         try {
-            return noticeDao.findNoticeByName(username);
+            List<Notice> noticeList = noticeDao.findNoticeByPerson(username);
+            return noticeList;
         } catch (DaoException e) {
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException(e);
         }
     }
 }

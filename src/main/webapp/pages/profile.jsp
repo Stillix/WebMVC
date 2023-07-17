@@ -11,25 +11,6 @@
     <title>Profile</title>
 </head>
 <body>
-<form action="/WebMVC_war_exploded/controller" method="post">
-    <input type="hidden" name="command" value="update_user">
-    <h1>Edit User</h1>
-    <p>${message}</p>
-    User ID:
-    <input type="text" id="userId" name="user_id" value="">
-    Name:
-    <input type="text" id="name" name="name" value="" required>
-    Surname:
-    <input type="text" id="surname" name="surname" value="" required>
-    Phone:
-    <input type="text" id="phone" name="phone" value="" required>
-    Email:
-    <input type="email" id="email" name="email" value="" required>
-    Role:
-    <input type="text" id="role" name="role" value="" required>
-    <button type="submit">Update User</button>
-</form>
-<br><br><br><br><br><br>
 
 <form action="controller" method="post">
     <input type="hidden" name="command" value="find_user_by_name">

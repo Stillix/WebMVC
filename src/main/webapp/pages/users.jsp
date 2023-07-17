@@ -8,6 +8,7 @@
 <form action="/WebMVC_war_exploded/controller" method="post">
     <input type="hidden" name="command" value="show_users">
     <h1>User List</h1>
+
     <table>
         <tr>
             <th>ID</th>
@@ -18,7 +19,7 @@
             <th>Email</th>
             <th>Role</th>
         </tr>
-
+        <p>${message}</p>
         <c:forEach items="${userList}" var="userList">
             <tr>
                 <td>${userList.userId}</td>
@@ -31,7 +32,7 @@
             </tr>
         </c:forEach>
     </table>
-    <p>${message}</p>
+
 
 </form>
 </body>

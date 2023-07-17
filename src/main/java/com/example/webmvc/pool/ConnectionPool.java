@@ -22,11 +22,8 @@ public class ConnectionPool {
     private static Logger logger = LogManager.getLogger();
     private static ConnectionPool instance;
     private static final int POOL_SIZE = 8;
-
     private static Lock lock = new ReentrantLock(true);
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
-
-
     private BlockingQueue<ProxyConnection> freeConnections;
     private Queue<ProxyConnection> givenAwayConnections;
 
@@ -34,7 +31,7 @@ public class ConnectionPool {
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
         } catch (SQLException e) {
-           logger.log(Level.ERROR,"");
+            logger.log(Level.FATAL, "");
             throw new ExceptionInInitializerError(e.getMessage());
         }
     }
@@ -99,8 +96,8 @@ public class ConnectionPool {
             freeConnections.put((ProxyConnection) connection);
         } catch (InterruptedException e) {
             logger.log(Level.ERROR, "InterruptedException in method releaseConnection " + e.getMessage());
+            Thread.currentThread().interrupt();
         }
-
         return true;
     }
 
@@ -109,7 +106,7 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                logger.error("Error deregistering driver" + e.getMessage());
+                logger.fatal("Error deregistering driver" + e.getMessage());
             }
         });
     }
@@ -120,7 +117,7 @@ public class ConnectionPool {
                 ProxyConnection proxyConnection = freeConnections.take();
                 proxyConnection.reallyClose();
             } catch (InterruptedException e) {
-                logger.error("Failed destroy pool" + e.getMessage());
+                logger.fatal("Failed destroy pool" + e.getMessage());
             }
         }
     }

@@ -4,13 +4,14 @@ import com.example.webmvc.entity.Notice;
 import com.example.webmvc.exception.DaoException;
 
 
+import java.util.List;
 import java.util.Optional;
 
 public interface NoticeDao {
 
-    Optional<Notice> findNoticeByPerson(String personName) throws DaoException;
+    List<Notice> findNoticeByPerson(String personName) throws DaoException;
 
-    Optional<Notice> findNoticeByName(String userName) throws DaoException;
+    List<Notice> findNoticeByName(String userName) throws DaoException;
 
 
 }
