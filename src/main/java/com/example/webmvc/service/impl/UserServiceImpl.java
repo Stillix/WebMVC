@@ -6,6 +6,7 @@ import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.UserService;
+import com.example.webmvc.util.PasswordEncoder;
 import com.example.webmvc.validator.impl.LoginValidatorImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
     private static UserServiceImpl instance = new UserServiceImpl();
     private static  UserDaoImpl userDao = UserDaoImpl.getInstance();
     private static  LoginValidatorImpl loginValidator = new LoginValidatorImpl();
+    private static  PasswordEncoder passwordEncoder = new PasswordEncoder();
 
     private UserServiceImpl() {
     }
@@ -43,7 +45,7 @@ public class UserServiceImpl implements UserService {
         boolean match = false;
         try {
             if (loginValidator.isValidLogin(login) && loginValidator.isValidPassword(password)) {
-                String digest = DigestUtils.md5Hex(password);
+                String digest = passwordEncoder.encode(password);
                 match = userDao.authenticate(login, digest);
             }
         } catch (DaoException e) {
@@ -57,14 +59,14 @@ public class UserServiceImpl implements UserService {
     public Optional<User> register(User user) throws ServiceException {
         if (isLoginAvailable(user.getUserLogin())) {
             if (loginValidator.isValidLogin(user.getUserLogin()) && loginValidator.isValidPassword(user.getUserPassword())) {
-                String digest = DigestUtils.md5Hex(user.getUserPassword());
+                String digest = passwordEncoder.encode(user.getUserPassword());
                 user.setUserPassword(digest);
                 try {
                     userDao.create(user);
                 } catch (DaoException e) {
                     throw new ServiceException("Failed to register user" + e);
                 }
-                logger.info("Пароль шифрованный: " + user.getUserPassword());
+                logger.info("Password after encode: " + user.getUserPassword());
                 return Optional.of(user);
             } else {
                 return getUser("Invalid login or password format");
