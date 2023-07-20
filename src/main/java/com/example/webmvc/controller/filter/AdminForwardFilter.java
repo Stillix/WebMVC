@@ -19,7 +19,7 @@ public class AdminForwardFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         User user = (User) httpRequest.getSession().getAttribute(USER_ROLE);
-        if (user == null || !user.getUserRole().equals(UserRoleEnum.ADMIN.getRole())) {
+        if (user == null || !user.getUserRole().equals(UserRoleEnum.ADMIN.getUserRole())) {
             RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/index.jsp");
             dispatcher.forward(request, response);
         }
