@@ -1,5 +1,6 @@
 package com.example.webmvc.entity;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -61,8 +62,8 @@ public class User extends AbstractEntity {
         private Builder() {
         }
 
-        public Builder setErrorMessage(String errorMessage) {
-            User.this.errorMessage = errorMessage;
+        public Builder setErrorMessage(Map<String,String> errorMessages) {
+            User.this.errorMessages = errorMessages;
             return this;
         }
 

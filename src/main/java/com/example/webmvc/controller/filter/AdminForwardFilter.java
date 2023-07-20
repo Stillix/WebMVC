@@ -11,11 +11,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 //@WebFilter(dispatcherTypes = { DispatcherType.FORWARD }, urlPatterns = { "/pages/admin/*" } )
-public class AdminForwardFilter implements Filter {
+public class AdminForwardFilter  {
     private static Logger logger = LogManager.getLogger();
 
-    public void init(FilterConfig fConfig) throws ServletException  {
-    }
+
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException  {
 //        HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -27,8 +26,5 @@ public class AdminForwardFilter implements Filter {
 //        chain.doFilter(request, response);
     }
 
-    @Override
-    public void destroy() {
 
-    }
 }

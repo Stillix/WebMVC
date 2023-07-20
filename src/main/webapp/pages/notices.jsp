@@ -7,23 +7,24 @@
 </head>
 <body>
 <form action="/WebMVC_war_exploded/controller" method="post">
-    <input type="hidden" name="command" value="show_users">
+    <input type="hidden" name="command" value="show_all_notices">
 
     <h1>Notices</h1>
-
+    ${message}
     <c:forEach items="${noticeList}" var="noticeList">
         ${noticeList.noticeId}
         ${noticeList.title}
-        ${noticeList.userId}
-        ${noticeList.personId}
-        ${noticeList.executionTime}
-        ${noticeList.publicationDateTime}
-        ${noticeList.reward}
-        ${noticeList.statusId}
+        ${noticeList.personName}
+        ${noticeList.personSurname}
+        ${noticeList.personAge}
         ${noticeList.description}
+        ${noticeList.executionTime}
+        ${noticeList.reward}
+        ${noticeList.publicationDateTime}
+        <br>
     </c:forEach>
 
-    <p>${message}</p>
+
 </form>
 </body>
 </html>

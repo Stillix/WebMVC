@@ -13,9 +13,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Map;
 import java.util.Optional;
 
-import static com.example.webmvc.command.RequestAttributeName.ERROR_MESSAGE;
 import static com.example.webmvc.command.RequestParameterName.*;
 
 public class RegisterCommand implements Command {
@@ -46,13 +46,14 @@ public class RegisterCommand implements Command {
         try {
             Optional<User> createdUser = userService.register(user);
             if (createdUser.isPresent()) {
-                String errorMessage = createdUser.get().getErrorMessage();
+                Map<String, String> errorMessage = createdUser.get().getErrorMessages();
                 if (errorMessage == null || errorMessage.isEmpty()) {
-                    logger.log(Level.INFO, "User was successfully created and added to the database: " + user);
+                    logger.log(Level.INFO, "User was successfully created and added to the database: " + createdUser);
                     return "/pages/success_register.jsp";
                 } else {
-                    request.setAttribute(ERROR_MESSAGE, errorMessage);
-                    logger.log(Level.WARN, errorMessage);
+                    for (Map.Entry<String, String> error : errorMessage.entrySet()) {
+                        request.setAttribute(error.getKey(), error.getValue());
+                    }
                 }
             }
         } catch (ServiceException e) {
@@ -61,6 +62,5 @@ public class RegisterCommand implements Command {
         }
         return "/pages/registration.jsp";
     }
-
 }
 

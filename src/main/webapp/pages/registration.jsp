@@ -14,15 +14,15 @@
 <h1>Регистрация</h1>
 <form action="/WebMVC_war_exploded/controller" method="post">
   <input type="hidden" name="command" value="register">
-  Логин: <input type="text" name="login" required><br>
-  Пароль: <input type="password" name="password" required><br>
-  Имя: <input type="text" name="name" required><br>
-  Фамилия: <input type="text" name="surname" required><br>
-  Телефон: <input type="text" name="phone" required><br>
-  Email: <input type="email" name="email" required><br>
+    Логин: <input type="text" name="login" required>${errorLoginMessage}${errorLoginExistMessage}<br>
+  Пароль: <input type="password" name="password" required>${errorPasswordMessage}<br>
+  Имя: <input type="text" name="name" required>${errorNameMessage}<br>
+  Фамилия: <input type="text" name="surname" required>${errorSurnameMessage}<br>
+  Телефон: <input type="text" name="phone" required>${errorPhoneMessage}<br>
+  Email: <input type="email" name="email" required>${errorEmailMessage}<br>
  <br>
   <input type="submit" value="Зарегистрироваться"><br>
-    ${errorMessage}
+
 </form>
 </body>
 </html>

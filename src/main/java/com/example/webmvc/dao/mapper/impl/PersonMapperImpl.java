@@ -1,13 +1,10 @@
-package com.example.webmvc.mapper.impl;
+package com.example.webmvc.dao.mapper.impl;
 
-import com.example.webmvc.entity.Notice;
 import com.example.webmvc.entity.Person;
-import com.example.webmvc.mapper.Mapper;
+import com.example.webmvc.dao.mapper.Mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Map;
 
 public class PersonMapperImpl implements Mapper<Person> {
 

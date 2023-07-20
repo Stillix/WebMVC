@@ -3,17 +3,24 @@ package com.example.webmvc.service.impl;
 import com.example.webmvc.dao.impl.NoticeDaoImpl;
 
 import com.example.webmvc.entity.Notice;
+import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.NoticeService;
+import com.example.webmvc.validator.NoticeValidator;
+import com.example.webmvc.validator.impl.NoticeValidatorImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class NoticeServiceImpl implements NoticeService {
-    private static NoticeDaoImpl noticeDao = NoticeDaoImpl.getInstance();
+    private static Logger logger = LogManager.getLogger();
     private static NoticeServiceImpl instance = new NoticeServiceImpl();
-
+    private NoticeDaoImpl noticeDao = NoticeDaoImpl.getInstance();
+    private static NoticeValidatorImpl noticeValidator = new NoticeValidatorImpl();
 
     private NoticeServiceImpl() {
     }
@@ -24,43 +31,42 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public boolean deleteNotice(int noticeId) throws ServiceException {
-        boolean match;
         try {
-            if (noticeDao.delete(noticeId)) {
-                match = true;
-            } else {
-                match = false;
-            }
+            return noticeDao.delete(noticeId);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
-        return match;
     }
 
 
     @Override
     public boolean updateNotice(Notice notice) throws ServiceException {
-        boolean match;
         try {
-            if (noticeDao.update(notice)) {
-                match = true;
-            } else {
-                match = false;
-            }
+            return noticeDao.update(notice);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
-        return match;
+
     }
 
     @Override
     public Optional<Notice> createNotice(Notice notice) throws ServiceException {
-        try {
-            noticeDao.create(notice);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
+        Map<String, String> validNotice = noticeValidator.isValidNotice(notice);
+        if (validNotice.isEmpty()) {
+            try {
+                noticeDao.create(notice);
+            } catch (DaoException e) {
+                throw new ServiceException("Failed to create notice" + e);
+            }
+            return Optional.of(notice);
+        } else {
+            return getNotice(validNotice);
         }
-        return Optional.ofNullable(notice);
+    }
+
+    private static Optional<Notice> getNotice(Map<String, String> errorMessage) {
+        Notice errorNotice = Notice.newBuilder().setErrorMessage(errorMessage).build();
+        return Optional.of(errorNotice);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.webmvc.entity;
 
 import java.sql.Timestamp;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -8,9 +9,9 @@ public class Notice extends AbstractEntity {
     private int noticeId;
     private String title;
     private int userId;
-    private String namePerson;
-    private String surnamePerson;
-    private int age;
+    private String personName;
+    private String personSurname;
+    private int personAge;
     private String personStatus;
     private String description;
     private int executionTime;
@@ -40,16 +41,16 @@ public class Notice extends AbstractEntity {
     }
 
 
-    public String getNamePerson() {
-        return namePerson;
+    public String getPersonName() {
+        return personName;
     }
 
-    public String getSurnamePerson() {
-        return surnamePerson;
+    public String getPersonSurname() {
+        return personSurname;
     }
 
-    public int getAge() {
-        return age;
+    public int getPersonAge() {
+        return personAge;
     }
 
     public int getExecutionTime() {
@@ -98,7 +99,7 @@ public class Notice extends AbstractEntity {
         }
 
         public Builder setNamePerson(String namePerson) {
-            Notice.this.namePerson = namePerson;
+            Notice.this.personName = namePerson;
             return this;
         }
         public Builder setPersonStatus(String personStatus) {
@@ -106,12 +107,12 @@ public class Notice extends AbstractEntity {
             return this;
         }
         public Builder setSurnamePerson(String surnamePerson) {
-            Notice.this.surnamePerson = surnamePerson;
+            Notice.this.personSurname = surnamePerson;
             return this;
         }
 
         public Builder setAge(int age) {
-            Notice.this.age = age;
+            Notice.this.personAge = age;
             return this;
         }
 
@@ -140,10 +141,15 @@ public class Notice extends AbstractEntity {
             Notice.this.description = description;
             return this;
         }
+        public Builder setErrorMessage(Map<String,String> errorMessages) {
+            Notice.this.errorMessages = errorMessages;
+            return this;
+        }
 
         public Notice build() {
             return Notice.this;
         }
+
 
     }
 
@@ -152,12 +158,12 @@ public class Notice extends AbstractEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Notice notice = (Notice) o;
-        return noticeId == notice.noticeId && userId == notice.userId && age == notice.age && executionTime == notice.executionTime && reward == notice.reward && statusId == notice.statusId && Objects.equals(title, notice.title) && Objects.equals(namePerson, notice.namePerson) && Objects.equals(surnamePerson, notice.surnamePerson) && Objects.equals(description, notice.description) && Objects.equals(publicationDateTime, notice.publicationDateTime);
+        return noticeId == notice.noticeId && userId == notice.userId && personAge == notice.personAge && executionTime == notice.executionTime && reward == notice.reward && statusId == notice.statusId && Objects.equals(title, notice.title) && Objects.equals(personName, notice.personName) && Objects.equals(personSurname, notice.personSurname) && Objects.equals(description, notice.description) && Objects.equals(publicationDateTime, notice.publicationDateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(noticeId, title, userId, namePerson, surnamePerson, age, description, executionTime, publicationDateTime, reward, statusId);
+        return Objects.hash(noticeId, title, userId, personName, personSurname, personAge, description, executionTime, publicationDateTime, reward, statusId);
     }
 
     @Override
@@ -166,9 +172,9 @@ public class Notice extends AbstractEntity {
                 .add("noticeId=" + noticeId)
                 .add("title='" + title + "'")
                 .add("userId=" + userId)
-                .add("namePerson='" + namePerson + "'")
-                .add("surnamePerson='" + surnamePerson + "'")
-                .add("age=" + age)
+                .add("namePerson='" + personName + "'")
+                .add("surnamePerson='" + personSurname + "'")
+                .add("age=" + personAge)
                 .add("description='" + description + "'")
                 .add("executionTime=" + executionTime)
                 .add("publicationDateTime=" + publicationDateTime)

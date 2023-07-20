@@ -1,7 +1,7 @@
-package com.example.webmvc.mapper.impl;
+package com.example.webmvc.dao.mapper.impl;
 
+import com.example.webmvc.dao.mapper.Mapper;
 import com.example.webmvc.entity.Notice;
-import com.example.webmvc.mapper.Mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

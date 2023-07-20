@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Timestamp;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.example.webmvc.command.RequestAttributeName.ERROR_MESSAGE;
@@ -31,43 +32,44 @@ public class CreateNoticeCommand implements Command {
         int noticeId = 0;
         long now = System.currentTimeMillis();
         String title = request.getParameter(TITLE);
-        String name = request.getParameter(NAME);
-        String surname = request.getParameter(SURNAME);
-        int age = Integer.parseInt(request.getParameter(AGE));
+        String personName = request.getParameter(NAME);
+        String personSurname = request.getParameter(SURNAME);
+        int personAge = Integer.parseInt(request.getParameter(AGE));
         String personStatus = request.getParameter(PERSON_STATUS);
         String description = request.getParameter(DESCRIPTION);
         int executionTime = Integer.parseInt(request.getParameter(EXECUTION_TIME));
         int reward = Integer.parseInt(request.getParameter(REWARD));
-        Timestamp publicationDate = new Timestamp(now);
+        Timestamp publicationDateTime = new Timestamp(now);
         NoticeService noticeService = NoticeServiceImpl.getInstance();
         Notice notice = Notice.newBuilder()
                 .setNoticeId(noticeId)
                 .setTitle(title)
-                .setUserId(0)
-                .setNamePerson(name)
-                .setSurnamePerson(surname)
-                .setAge(age)
+                .setUserId(50)
+                .setNamePerson(personName)
+                .setSurnamePerson(personSurname)
+                .setAge(personAge)
                 .setDescription(description)
                 .setPersonStatus(personStatus)
                 .setExecutionTime(executionTime)
                 .setReward(reward)
                 .setStatusId(1)
-                .setPublicationDateTime(publicationDate)
+                .setPublicationDateTime(publicationDateTime)
                 .build();
         try {
             Optional<Notice> createdNotice = noticeService.createNotice(notice);
             if (createdNotice.isPresent()) {
-                String errorMessage = createdNotice.get().getErrorMessage();
+                Map<String, String> errorMessage = createdNotice.get().getErrorMessages();
                 if (errorMessage == null || errorMessage.isEmpty()) {
-                    logger.log(Level.INFO, "Notice was successfully created and added to the database: " + notice);
+                    logger.log(Level.INFO, "User was successfully created and added to the database: " + createdNotice);
                     return "/pages/success_notice.jsp";
                 } else {
-                    request.setAttribute(ERROR_MESSAGE, errorMessage);
-                    logger.log(Level.WARN, errorMessage);
+                    for (Map.Entry<String, String> error : errorMessage.entrySet()) {
+                        request.setAttribute(error.getKey(), error.getValue());
+                    }
                 }
             }
         } catch (ServiceException e) {
-            logger.log(Level.ERROR, "Failed to create notice");
+            logger.log(Level.ERROR, "Except");
             throw new CommandException(e);
         }
         return "/pages/form_notice.jsp";

@@ -1,13 +1,17 @@
 package com.example.webmvc.entity;
 
-public abstract class AbstractEntity {
-    String errorMessage;
+import java.util.HashMap;
+import java.util.Map;
 
-    public String getErrorMessage() {
-        return errorMessage;
+public abstract class AbstractEntity {
+
+    Map<String, String> errorMessages = new HashMap<>();
+
+    public Map<String, String> getErrorMessages() {
+        return errorMessages;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setErrorMessages(Map<String, String> errorMessages) {
+        this.errorMessages = errorMessages;
     }
 }

@@ -4,7 +4,7 @@ import com.example.webmvc.dao.BaseDao;
 import com.example.webmvc.dao.UserDao;
 import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.DaoException;
-import com.example.webmvc.mapper.impl.UserMapperImpl;
+import com.example.webmvc.dao.mapper.impl.UserMapperImpl;
 import com.example.webmvc.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
