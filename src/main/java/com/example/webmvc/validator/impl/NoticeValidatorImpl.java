@@ -13,7 +13,7 @@ public class NoticeValidatorImpl {
     public static final String NAME_PERSON_REGEX = "^[a-zA-Z]{2,15}$";
     public static final String SURNAME_PERSON_REGEX = "^[a-zA-Z]{2,15}$";
     public static final String AGE_REGEX = "^(1[89]|[2-9]\\d)$";
-//    public static final String DESCRIPTION_REGEX = "^[a-zA-Z0-9%$.,]*$";
+    //    public static final String DESCRIPTION_REGEX = "^[a-zA-Z0-9%$.,]*$";
     public static final String EXECUTION_TIME_REGEX = "^\\d+$";
     public static final String REWARD_REGEX = "^\\d+$";
 
@@ -47,21 +47,26 @@ public class NoticeValidatorImpl {
     public boolean isValidTitle(String title) {
         return title != null && title.matches(TITLE_REGEX);
     }
+
     public boolean isValidNamePerson(String namePerson) {
         return namePerson != null && namePerson.matches(NAME_PERSON_REGEX);
     }
+
     public boolean isValidSurnamePerson(String surnamePerson) {
         return surnamePerson != null && surnamePerson.matches(SURNAME_PERSON_REGEX);
     }
+
     public boolean isValidAge(String age) {
         return age != null && age.matches(AGE_REGEX);
     }
-//    public boolean isValidDescription(String description) {
+
+    //    public boolean isValidDescription(String description) {
 //        return description != null && description.matches(DESCRIPTION_REGEX);
 //    }
     public boolean isValidExecutionTime(String executionTime) {
         return executionTime != null && executionTime.matches(EXECUTION_TIME_REGEX);
     }
+
     public boolean isValidReward(String reward) {
         return reward != null && reward.matches(REWARD_REGEX);
     }

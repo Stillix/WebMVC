@@ -24,22 +24,15 @@ public class Controller extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.setContentType("text/html");
-        String commandStr = request.getParameter(COMMAND);
-        Command command = CommandType.defineCommand(commandStr);
-        String page;
-        try {
-            page = command.execute(request);
-            request.getRequestDispatcher(page).forward(request, response);
-        } catch (CommandException e) {
-            //log
-            throw new ServletException(e.getMessage());
-
-        }
+        processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         String commandStr = request.getParameter(COMMAND);
         Command command = CommandType.defineCommand(commandStr);
