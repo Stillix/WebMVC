@@ -10,20 +10,20 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-//@WebFilter(dispatcherTypes = { DispatcherType.FORWARD }, urlPatterns = { "/pages/admin/*" } )
-public class AdminForwardFilter  {
+import static com.example.webmvc.command.SessionAttributeName.USER_ROLE;
+
+@WebFilter(dispatcherTypes = {DispatcherType.FORWARD}, urlPatterns = {"/pages/admin/*"})
+public class AdminForwardFilter {
     private static Logger logger = LogManager.getLogger();
 
-
-
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException  {
-//        HttpServletRequest httpRequest = (HttpServletRequest) request;
-//        User user = (User) httpRequest.getSession().getAttribute("user");
-//        if(user == null || !user.getUserRole().equals(UserRoleEnum.ADMIN))  {
-//            RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/webapp/index.jsp");
-//            dispatcher.forward(request, response);
-//        }
-//        chain.doFilter(request, response);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        User user = (User) httpRequest.getSession().getAttribute(USER_ROLE);
+        if (user == null || !user.getUserRole().equals(UserRoleEnum.ADMIN.getRole())) {
+            RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/index.jsp");
+            dispatcher.forward(request, response);
+        }
+        chain.doFilter(request, response);
     }
 
 
