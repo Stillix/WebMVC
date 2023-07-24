@@ -2,7 +2,6 @@ package com.example.webmvc.command.impl;
 
 import com.example.webmvc.command.Command;
 import com.example.webmvc.entity.Notice;
-import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.CommandException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.NoticeService;
@@ -37,7 +36,7 @@ public class SaveNoticeCommand implements Command {
         String description = request.getParameter(DESCRIPTION);
         int executionTime = Integer.parseInt(request.getParameter(EXECUTION_TIME));
         int reward = Integer.parseInt(request.getParameter(REWARD));
-        int noticeId = 0;
+        int noticeId;
         Timestamp publicationDateTime;
         try {
             Optional<Notice> oldNotice = noticeService.findNoticeByNoticeId(Integer.parseInt(request.getParameter(NOTICE_ID)));
@@ -61,7 +60,6 @@ public class SaveNoticeCommand implements Command {
                     .setReward(reward)
                     .setPublicationDateTime(publicationDateTime)
                     .build();
-
             boolean updatedNotice = noticeService.updateNotice(notice);
             if (updatedNotice) {
                 logger.log(Level.INFO, "Notice was successfully update : ");
