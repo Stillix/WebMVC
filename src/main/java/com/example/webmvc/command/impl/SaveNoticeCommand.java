@@ -25,16 +25,6 @@ public class SaveNoticeCommand implements Command {
     private static Logger logger = LogManager.getLogger();
     private NoticeService noticeService = NoticeServiceImpl.getInstance();
 
-    //        HttpSession session = request.getSession();
-//        Notice notice = (Notice) session.getAttribute(NOTICE);
-//        notice.setTitle(title);
-//        notice.setPersonName(personName);
-//        notice.setPersonSurname(personSurname);
-//        notice.setPersonAge(personAge);
-//        notice.setPersonStatus(personStatus);
-//        notice.setDescription(description);
-//        notice.setExecutionTime(executionTime);
-//        notice.setReward(reward);
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
