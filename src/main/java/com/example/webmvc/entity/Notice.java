@@ -19,14 +19,12 @@ public class Notice extends AbstractEntity {
     private int reward;
     private int statusId;
 
-
     private Notice() {
     }
 
     public String getTitle() {
         return title;
     }
-
 
     public int getNoticeId() {
         return noticeId;
@@ -71,6 +69,54 @@ public class Notice extends AbstractEntity {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setNoticeId(int noticeId) {
+        this.noticeId = noticeId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public void setPersonSurname(String personSurname) {
+        this.personSurname = personSurname;
+    }
+
+    public void setPersonAge(int personAge) {
+        this.personAge = personAge;
+    }
+
+    public void setPersonStatus(String personStatus) {
+        this.personStatus = personStatus;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setExecutionTime(int executionTime) {
+        this.executionTime = executionTime;
+    }
+
+    public void setPublicationDateTime(Timestamp publicationDateTime) {
+        this.publicationDateTime = publicationDateTime;
+    }
+
+    public void setReward(int reward) {
+        this.reward = reward;
+    }
+
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
     }
 
     public static Builder newBuilder() {

@@ -1,15 +1,11 @@
 package com.example.webmvc.validator.impl;
 
-import com.example.webmvc.dao.UserDao;
-import com.example.webmvc.dao.impl.UserDaoImpl;
 import com.example.webmvc.entity.User;
-import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.validator.UserValidator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.example.webmvc.command.RequestAttributeName.*;
 
@@ -22,14 +18,10 @@ public class UserValidatorImpl implements UserValidator {
     public static final String PASSWORD_REGEX = "(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{6,30}";
 
 
-    public Map<String, String> isValidUser(User user) throws ServiceException {
+    public Map<String, String> validate(User user) throws ServiceException {
         Map<String, String> errorMessages = new HashMap<>();
-        if (isLoginExist(user.getUserLogin())) {
-            errorMessages.put(ERROR_LOGIN_EXIST_MESSAGE, "Login is already exist");
-        } else {
-            if (!isValidLogin(user.getUserLogin())) {
-                errorMessages.put(ERROR_LOGIN_MESSAGE, "Invalid login format");
-            }
+        if (!isValidLogin(user.getUserLogin())) {
+            errorMessages.put(ERROR_LOGIN_MESSAGE, "Invalid login format");
         }
         if (!isValidPassword(user.getUserPassword())) {
             errorMessages.put(ERROR_PASSWORD_MESSAGE, "Invalid password format");
@@ -46,18 +38,15 @@ public class UserValidatorImpl implements UserValidator {
         if (!isValidPhone(user.getUserPhone())) {
             errorMessages.put(ERROR_PHONE_MESSAGE, "Invalid phone format");
         }
-
         return errorMessages;
     }
 
-    public boolean isLoginExist(String login) throws ServiceException {
-        try {
-            UserDao userDao = UserDaoImpl.getInstance();
-            Optional<User> existingUser = userDao.findUserByLogin(login);
-            return existingUser.isPresent();
-        } catch (DaoException e) {
-            throw new ServiceException("Failed to check login availability", e);
-        }
+    @Override
+    public boolean isValidUser(User user) {
+        return user.getUserName() != null && user.getUserName().matches(NAME_REGEX) &&
+                user.getUserSurname() != null && user.getUserSurname().matches(SURNAME_REGEX) &&
+                user.getUserPhone() != null && user.getUserPhone().matches(PHONE_REGEX) &&
+                user.getUserEmail() != null && user.getUserEmail().matches(EMAIL_REGEX);
     }
 
     @Override

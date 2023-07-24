@@ -11,10 +11,8 @@ public class NoticeMapperImpl implements Mapper<Notice> {
 
     public static final String ID_NOTICE = "id_notice";
     public static final String TITLE = "title";
-    public static final String ID_USER = "id_user";
     public static final String EXECUTION_TIME = "execution_time";
     public static final String REWARD = "reward";
-    public static final String ID_STATUS = "id_status";
     public static final String DESCRIPTION = "description";
     public static final String PUBLICATION_DATE = "publication_date";
     public static final String AGE = "age";
@@ -26,7 +24,6 @@ public class NoticeMapperImpl implements Mapper<Notice> {
     public Notice buildEntity(ResultSet resultSet) throws SQLException {
         int idNotice = resultSet.getInt(ID_NOTICE);
         String title = resultSet.getString(TITLE);
-        int idUser = resultSet.getInt(ID_USER);
         String name = resultSet.getString(NAME);
         String surname = resultSet.getString(SURNAME);
         int age = resultSet.getInt(AGE);
@@ -34,12 +31,10 @@ public class NoticeMapperImpl implements Mapper<Notice> {
         String description = resultSet.getString(DESCRIPTION);
         int executionTime = resultSet.getInt(EXECUTION_TIME);
         int reward = resultSet.getInt(REWARD);
-        int statusId = resultSet.getInt(ID_STATUS);
         Timestamp publicationDate = resultSet.getTimestamp(PUBLICATION_DATE);
         return Notice.newBuilder()
                 .setNoticeId(idNotice)
                 .setTitle(title)
-                .setUserId(idUser)
                 .setNamePerson(name)
                 .setSurnamePerson(surname)
                 .setAge(age)
@@ -47,7 +42,6 @@ public class NoticeMapperImpl implements Mapper<Notice> {
                 .setDescription(description)
                 .setExecutionTime(executionTime)
                 .setReward(reward)
-                .setStatusId(statusId)
                 .setPublicationDateTime(publicationDate).build();
     }
 }

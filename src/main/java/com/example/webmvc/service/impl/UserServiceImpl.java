@@ -7,7 +7,6 @@ import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.UserService;
 import com.example.webmvc.util.PasswordEncoder;
-import com.example.webmvc.util.Validation;
 import com.example.webmvc.validator.impl.UserValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import static com.example.webmvc.command.RequestAttributeName.ERROR_LOGIN_EXIST_MESSAGE;
 
 public class UserServiceImpl implements UserService {
     private static Logger logger = LogManager.getLogger();
@@ -45,10 +45,23 @@ public class UserServiceImpl implements UserService {
         return match;
     }
 
+    public User isLoginExist(String login) throws ServiceException {
+        try {
+            UserDao userDao = UserDaoImpl.getInstance();
+            User existingUser = userDao.findUserByLogin(login);
+            return existingUser;
+        } catch (DaoException e) {
+            throw new ServiceException("Failed to check login availability", e);
+        }
+    }
 
     @Override
-    public Optional<User> register(User user) throws ServiceException {
-        Map<String, String> validUser = userValidator.isValidUser(user);
+    public User register(User user) throws ServiceException {
+        Map<String, String> validUser = userValidator.validate(user);
+        if (isLoginExist(user.getUserLogin()) != null) {
+            validUser.put(ERROR_LOGIN_EXIST_MESSAGE, "Login is already exist");
+            return getUser(validUser);
+        }
         if (validUser.isEmpty()) {
             String digest = passwordEncoder.encode(user.getUserPassword());
             user.setUserPassword(digest);
@@ -58,14 +71,14 @@ public class UserServiceImpl implements UserService {
                 throw new ServiceException("Failed to register user" + e);
             }
             logger.info("Password after encode: " + user.getUserPassword());
-            return Optional.of(user);
+            return user;
         } else {
             return getUser(validUser);
         }
     }
 
     @Override
-    public Optional<User> findUserByLogin(String login) throws ServiceException {
+    public User findUserByLogin(String login) throws ServiceException {
         try {
             return userDao.findUserByLogin(login);
         } catch (DaoException e) {
@@ -73,9 +86,23 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private static Optional<User> getUser(Map<String, String> errorMessage) {
+    private static User getUser(Map<String, String> errorMessage) {
         User errorUser = User.newBuilder().setErrorMessage(errorMessage).build();
-        return Optional.of(errorUser);
+        return errorUser;
+    }
+
+    @Override
+    public boolean updateUser(User user) throws ServiceException {
+        boolean validUser = userValidator.isValidUser(user);
+        if (validUser) {
+            try {
+                return userDao.update(user);
+            } catch (DaoException e) {
+                throw new ServiceException("Failed to update user" + e);
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -102,15 +129,6 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUser(int userId) throws ServiceException {
         try {
             return (userDao.delete(userId));
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public boolean updateUser(User user) throws ServiceException {
-        try {
-            return userDao.update(user);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

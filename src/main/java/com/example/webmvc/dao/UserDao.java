@@ -4,13 +4,12 @@ import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.DaoException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserDao {
     boolean authenticate(String login, String password) throws DaoException;
 
     List<User> findUserByName(String username) throws DaoException;
 
-    Optional<User> findUserByLogin(String login) throws DaoException;
+    User findUserByLogin(String login) throws DaoException;
 
 }

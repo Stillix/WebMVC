@@ -44,10 +44,11 @@ public class RegisterCommand implements Command {
                 .setUserRole("client")
                 .build();
         try {
-            Optional<User> createdUser = userService.register(user);
-            if (createdUser.isPresent()) {
-                Map<String, String> errorMessage = createdUser.get().getErrorMessages();
+            User createdUser = userService.register(user);
+            if (createdUser != null) {
+                Map<String, String> errorMessage = createdUser.getErrorMessages();
                 if (errorMessage == null || errorMessage.isEmpty()) {
+
                     logger.log(Level.INFO, "User was successfully created and added to the database: " + createdUser);
                     return "/pages/success_register.jsp";
                 } else {

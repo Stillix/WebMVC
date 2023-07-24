@@ -14,11 +14,13 @@ import java.util.Optional;
 
 public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
     private static final String SELECT_NOTICE_BY_SURNAME_PERSON = "SELECT id_notice,title, id_user, name_person,surname_person,age,person_status,description,execution_time, reward, id_status, publication_date FROM notices WHERE surname = ?";
+    private static final String SELECT_NOTICE_BY_USER_ID = "SELECT id_notice,title, name_person,surname_person,age,person_status,description,execution_time, reward, publication_date FROM notices WHERE id_user = ?";
+    private static final String SELECT_NOTICE_BY_NOTICE_ID = "SELECT id_notice,title,id_user, name_person,surname_person,age,person_status,description,execution_time, reward, publication_date FROM notices WHERE id_notice = ?";
     private static final String SELECT_NOTICE_BY_USERNAME = "SELECT notices.id_notice,notices.title, notices.id_user, notices.name_person,notices.surname_person,notices.age,notices.description, notices.execution_time, notices.reward, notices.id_status,  notices.publication_date FROM notices WHERE notices.id_user IN (SELECT id_user FROM users WHERE surname = ?)";
     private static final String SELECT_ALL_NOTICES = "SELECT  id_notice,title,id_user, name_person,surname_person,age,person_status,description,execution_time, reward, id_status, publication_date FROM notices";
-    private static final String INSERT_NOTICE = "INSERT INTO notices (title, id_user, name_person,surname_person,age,person_status,description, execution_time, reward, id_status,publication_date) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
-    private static final String UPDATE_NOTICE_WHERE_ID = "UPDATE notice SET title = ?, id_user = ?,id_person= ?,execution_time= ?,reward= ?,id_status= ?,description=?,publication_date=? WHERE id_notice = ?";
-    private static final String DELETE_NOTICE_WHERE_ID = "DELETE FROM notice WHERE id_notice = ?";
+    private static final String INSERT_NOTICE = "INSERT INTO notices (title, name_person,surname_person,age,person_status,description, execution_time, reward, id_user, id_status,publication_date) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
+    private static final String UPDATE_NOTICE_WHERE_ID = "UPDATE notices SET title = ?,name_person=?,surname_person= ?,age= ?,person_status= ?, description= ?,execution_time= ?,reward= ? WHERE id_notice = ?";
+    private static final String DELETE_NOTICE_WHERE_ID = "DELETE FROM notices WHERE id_notice = ?";
     private static NoticeDaoImpl instance = new NoticeDaoImpl();
 
     private NoticeDaoImpl() {
@@ -58,6 +60,9 @@ public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_NOTICE, Statement.RETURN_GENERATED_KEYS)) {
             setStatementParameters(statement, notice);
+            statement.setInt(9, notice.getUserId());
+            statement.setInt(10, notice.getStatusId());
+            statement.setTimestamp(11, notice.getPublicationDateTime());
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                 ResultSet resultSet = statement.getGeneratedKeys();
@@ -130,17 +135,51 @@ public class NoticeDaoImpl extends BaseDao<Notice> implements NoticeDao {
         return noticeList;
     }
 
+    @Override
+    public List<Notice> findNoticeByUserId(int id) throws DaoException {
+        List<Notice> noticeList = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_NOTICE_BY_USER_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    NoticeMapperImpl noticeMapper = new NoticeMapperImpl();
+                    Notice notice = noticeMapper.buildEntity(resultSet);
+                    noticeList.add(notice);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return noticeList;
+    }
+
+    @Override
+    public Optional<Notice> findNoticeByNoticeId(int id) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_NOTICE_BY_NOTICE_ID)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                NoticeMapperImpl noticeMapper = new NoticeMapperImpl();
+                Notice notice = noticeMapper.buildEntity(resultSet);
+                return Optional.of(notice);
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage());
+        }
+        return Optional.empty();
+    }
+
+
     private void setStatementParameters(PreparedStatement statement, Notice notice) throws SQLException {
         statement.setString(1, notice.getTitle());
-        statement.setInt(2, notice.getUserId());
-        statement.setString(3, notice.getPersonName());
-        statement.setString(4, notice.getPersonSurname());
-        statement.setInt(5, notice.getPersonAge());
-        statement.setString(6, notice.getPersonStatus());
-        statement.setString(7, notice.getDescription());
-        statement.setInt(8, notice.getExecutionTime());
-        statement.setInt(9, notice.getReward());
-        statement.setInt(10, notice.getStatusId());
-        statement.setTimestamp(11,notice.getPublicationDateTime());
+        statement.setString(2, notice.getPersonName());
+        statement.setString(3, notice.getPersonSurname());
+        statement.setInt(4, notice.getPersonAge());
+        statement.setString(5, notice.getPersonStatus());
+        statement.setString(6, notice.getDescription());
+        statement.setInt(7, notice.getExecutionTime());
+        statement.setInt(8, notice.getReward());
     }
 }

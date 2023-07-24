@@ -12,6 +12,7 @@ public interface NoticeDao {
     List<Notice> findNoticeByPerson(String personName) throws DaoException;
 
     List<Notice> findNoticeByName(String userName) throws DaoException;
+    List<Notice> findNoticeByUserId(int id) throws DaoException;
 
-
+    Optional<Notice> findNoticeByNoticeId(int id) throws DaoException;
 }

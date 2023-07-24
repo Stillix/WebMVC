@@ -117,7 +117,7 @@ public class ConnectionPool {
                 ProxyConnection proxyConnection = freeConnections.take();
                 proxyConnection.reallyClose();
             } catch (InterruptedException e) {
-                logger.fatal("Failed destroy pool" + e.getMessage());
+                logger.error("Failed destroy pool" + e.getMessage());
             }
         }
     }

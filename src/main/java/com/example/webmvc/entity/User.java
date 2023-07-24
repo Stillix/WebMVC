@@ -49,20 +49,41 @@ public class User extends AbstractEntity {
         return userRole;
     }
 
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setUserSurname(String userSurname) {
+        this.userSurname = userSurname;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
     public static Builder newBuilder() {
         return new User().new Builder();
     }
 
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
 
     public class Builder {
 
         private Builder() {
         }
 
-        public Builder setErrorMessage(Map<String,String> errorMessages) {
+        public Builder setErrorMessage(Map<String, String> errorMessages) {
             User.this.errorMessages = errorMessages;
             return this;
         }

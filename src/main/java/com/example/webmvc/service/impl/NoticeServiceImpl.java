@@ -3,11 +3,9 @@ package com.example.webmvc.service.impl;
 import com.example.webmvc.dao.impl.NoticeDaoImpl;
 
 import com.example.webmvc.entity.Notice;
-import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.NoticeService;
-import com.example.webmvc.validator.NoticeValidator;
 import com.example.webmvc.validator.impl.NoticeValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,13 +39,18 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public boolean updateNotice(Notice notice) throws ServiceException {
-        try {
-            return noticeDao.update(notice);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
+        Map<String, String> validNotice = noticeValidator.isValidNotice(notice);
+        if (validNotice.isEmpty()) {
+            try {
+                return noticeDao.update(notice);
+            } catch (DaoException e) {
+                throw new ServiceException("Failed to update notice" + e);
+            }
+        } else {
+            return false;
         }
-
     }
+
 
     @Override
     public Optional<Notice> createNotice(Notice notice) throws ServiceException {
@@ -93,6 +96,26 @@ public class NoticeServiceImpl implements NoticeService {
         try {
             List<Notice> noticeList = noticeDao.findNoticeByPerson(username);
             return noticeList;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Notice> findNoticeByUserId(int id) throws ServiceException {
+        try {
+            List<Notice> noticeList = noticeDao.findNoticeByUserId(id);
+            return noticeList;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Optional<Notice> findNoticeByNoticeId(int id) throws ServiceException {
+        try {
+            Optional<Notice> notice = noticeDao.findNoticeByNoticeId(id);
+            return notice;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

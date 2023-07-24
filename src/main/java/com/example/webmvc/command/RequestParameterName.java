@@ -2,6 +2,7 @@ package com.example.webmvc.command;
 
 public final class RequestParameterName {
     public static final String COMMAND = "command";
+    public static final String NOTICE = "notice";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
     public static final String NAME = "name";
@@ -10,6 +11,7 @@ public final class RequestParameterName {
     public static final String EMAIL = "email";
     public static final String ROLE = "role";
     public static final String USER_ID = "user_id";
+    public static final String NOTICE_ID = "noticeId";
     public static final String TITLE = "title";
     public static final String ID_USER = "id_user";
     public static final String EXECUTION_TIME = "execution_time";

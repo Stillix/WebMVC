@@ -21,7 +21,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final String SELECT_ALL_USERS = "SELECT id_user, login, password, name, surname, phone, email, role FROM users";
     private static final String SELECT_USER_BY_NAME = "SELECT id_user, login, password, name, surname, phone, email, role FROM users WHERE name = ?";
     private static final String INSERT_USER = "INSERT INTO users (name,surname,phone,email,role,login, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_USER_WHERE_ID = "UPDATE users SET name= ?,surname= ?,phone= ?,email= ?,role=? WHERE id_user = ?";
+    private static final String UPDATE_USER_WHERE_ID = "UPDATE users SET name= ?,surname= ?,phone= ?,email= ? WHERE id_user = ?";
     private static final String DELETE_USER_WHERE_ID = "DELETE FROM users WHERE id_user = ?";
 
     private static UserDaoImpl instance = new UserDaoImpl();
@@ -50,7 +50,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_USER_WHERE_ID)) {
             setStatementParameters(statement, user);
-            statement.setInt(6, user.getUserId());
+            statement.setInt(5, user.getUserId());
             int rowsUpdated = statement.executeUpdate();
             return (rowsUpdated > 0);
         } catch (SQLException e) {
@@ -63,6 +63,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
             setStatementParameters(statement, user);
+            statement.setString(5, user.getUserRole());
             statement.setString(6, user.getUserLogin());
             statement.setString(7, user.getUserPassword());
             int rowsInserted = statement.executeUpdate();
@@ -120,20 +121,20 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByLogin(String login) throws DaoException {
+    public User findUserByLogin(String login) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_USER_BY_LOGIN)) {
             statement.setString(1, login);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     UserMapperImpl userMapper = new UserMapperImpl();
-                    return Optional.of(userMapper.buildEntity(resultSet));
+                    return userMapper.buildEntity(resultSet);
                 }
             }
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -160,6 +161,5 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         statement.setString(2, user.getUserSurname());
         statement.setString(3, user.getUserPhone());
         statement.setString(4, user.getUserEmail());
-        statement.setString(5, user.getUserRole());
     }
 }

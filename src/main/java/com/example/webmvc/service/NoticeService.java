@@ -1,7 +1,6 @@
 package com.example.webmvc.service;
 
 import com.example.webmvc.entity.Notice;
-import com.example.webmvc.exception.DaoException;
 import com.example.webmvc.exception.ServiceException;
 
 import java.util.List;
@@ -20,5 +19,7 @@ public interface NoticeService {
     List<Notice> findNoticeByPerson(String surname) throws ServiceException;
 
     List<Notice> findNoticeByName(String username) throws ServiceException;
+    List<Notice> findNoticeByUserId(int id) throws ServiceException;
+    Optional<Notice> findNoticeByNoticeId(int id) throws ServiceException;
 
 }

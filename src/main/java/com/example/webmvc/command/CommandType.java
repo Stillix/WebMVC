@@ -14,7 +14,11 @@ public enum CommandType {
     FIND_NOTICE_BY_PERSON_NAME(new FindNoticeByPersonNameCommand()),
     FIND_NOTICE_BY_USER_NAME(new FindNoticeByUserNameCommand()),
     SHOW_ALL_NOTICES(new ShowAllNoticesCommand()),
-    CREATE_NOTICE(new CreateNoticeCommand());
+    CREATE_NOTICE(new CreateNoticeCommand()),
+    UPDATE_USER(new UpdateUserCommand()),
+    EDIT_NOTICE(new EditNoticeCommand()),
+    FIND_USER_NOTICE(new FindUserNoticeCommand()),
+    SAVE_NOTICE(new SaveNoticeCommand());
 
 
     Command command;

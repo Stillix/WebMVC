@@ -2,14 +2,12 @@ package com.example.webmvc.command.impl;
 
 import com.example.webmvc.command.Command;
 import com.example.webmvc.entity.Notice;
-import com.example.webmvc.entity.User;
 import com.example.webmvc.exception.CommandException;
 import com.example.webmvc.exception.ServiceException;
 import com.example.webmvc.service.NoticeService;
-import com.example.webmvc.service.UserService;
 import com.example.webmvc.service.impl.NoticeServiceImpl;
-import com.example.webmvc.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,18 +16,21 @@ import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.example.webmvc.command.RequestAttributeName.ERROR_MESSAGE;
 import static com.example.webmvc.command.RequestParameterName.*;
+import static com.example.webmvc.command.SessionAttributeName.*;
+import static com.example.webmvc.command.SessionAttributeName.NOTICE;
+import static com.example.webmvc.command.SessionAttributeName.USER_ID;
 
 
 public class CreateNoticeCommand implements Command {
-
-
     private static Logger logger = LogManager.getLogger();
+    private NoticeService noticeService = NoticeServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
         int noticeId = 0;
+        HttpSession session = request.getSession();
+        int userId = (int) session.getAttribute(USER_ID);
         long now = System.currentTimeMillis();
         String title = request.getParameter(TITLE);
         String personName = request.getParameter(NAME);
@@ -40,11 +41,10 @@ public class CreateNoticeCommand implements Command {
         int executionTime = Integer.parseInt(request.getParameter(EXECUTION_TIME));
         int reward = Integer.parseInt(request.getParameter(REWARD));
         Timestamp publicationDateTime = new Timestamp(now);
-        NoticeService noticeService = NoticeServiceImpl.getInstance();
         Notice notice = Notice.newBuilder()
                 .setNoticeId(noticeId)
                 .setTitle(title)
-                .setUserId(50)
+                .setUserId(userId)
                 .setNamePerson(personName)
                 .setSurnamePerson(personSurname)
                 .setAge(personAge)
@@ -60,7 +60,8 @@ public class CreateNoticeCommand implements Command {
             if (createdNotice.isPresent()) {
                 Map<String, String> errorMessage = createdNotice.get().getErrorMessages();
                 if (errorMessage == null || errorMessage.isEmpty()) {
-                    logger.log(Level.INFO, "User was successfully created and added to the database: " + createdNotice);
+                    session.setAttribute(NOTICE, notice);
+                    logger.log(Level.INFO, "Notice was successfully created and added to the database: " + createdNotice);
                     return "/pages/success_notice.jsp";
                 } else {
                     for (Map.Entry<String, String> error : errorMessage.entrySet()) {
@@ -69,7 +70,7 @@ public class CreateNoticeCommand implements Command {
                 }
             }
         } catch (ServiceException e) {
-            logger.log(Level.ERROR, "Except");
+            logger.log(Level.ERROR, "Exception");
             throw new CommandException(e);
         }
         return "/pages/form_notice.jsp";

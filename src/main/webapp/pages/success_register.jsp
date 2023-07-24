@@ -12,7 +12,7 @@
 </head>
 <body>
 <h1 style="color:lightgreen">Регистрация прошла успешно</h1>
-Перейдите на <a href="pages/authorization.jsp">страницу входа</a>
+Перейдите на <a href="/WebMVC_war_exploded/pages/authorization.jsp">страницу входа</a>
 
 </body>
 </html>

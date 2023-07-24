@@ -5,10 +5,7 @@
     <title>Users</title>
 </head>
 <body>
-<form action="/WebMVC_war_exploded/controller" method="post">
-    <input type="hidden" name="command" value="show_users">
     <h1>User List</h1>
-
     <table>
         <tr>
             <th>ID</th>
@@ -30,10 +27,13 @@
                 <td>${userList.userEmail}</td>
                 <td>${userList.userRole}</td>
             </tr>
+            <form action="/WebMVC_war_exploded/controller" method="post">
+                <input type="hidden" name="userId" value="${userList.userId}">
+                <input type="hidden" name="command" value="delete_user">
+                <input type="submit" value="delete user" style="font-weight: bold; font-size: 10px; padding: 10px;">
+            </form>
         </c:forEach>
     </table>
-
-
 </form>
 </body>
 </html>

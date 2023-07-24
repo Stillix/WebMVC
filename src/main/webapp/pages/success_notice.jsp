@@ -12,6 +12,6 @@
 </head>
 <body>
 Заявка успешно подана
- <a href="pages/profile.jsp">Вернуться обратно</a>
+<a href="/WebMVC_war_exploded/pages/profile.jsp">Вернуться обратно</a>
 </body>
 </html>

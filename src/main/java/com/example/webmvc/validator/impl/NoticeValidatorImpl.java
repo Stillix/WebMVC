@@ -9,11 +9,11 @@ import static com.example.webmvc.command.RequestAttributeName.*;
 
 public class NoticeValidatorImpl {
 
-    public static final String TITLE_REGEX = "^[a-zA-Z]{2,15}$";
-    public static final String NAME_PERSON_REGEX = "^[a-zA-Z]{2,15}$";
-    public static final String SURNAME_PERSON_REGEX = "^[a-zA-Z]{2,15}$";
+    public static final String TITLE_REGEX = "^[a-zA-Z]{4,45}$";
+    public static final String NAME_PERSON_REGEX = "^[a-zA-Z]{2,20}$";
+    public static final String SURNAME_PERSON_REGEX = "^[a-zA-Z]{2,25}$";
     public static final String AGE_REGEX = "^(1[89]|[2-9]\\d)$";
-    //    public static final String DESCRIPTION_REGEX = "^[a-zA-Z0-9%$.,]*$";
+        public static final String DESCRIPTION_REGEX = "^[a-zA-Z0-9%$.,]*$";
     public static final String EXECUTION_TIME_REGEX = "^\\d+$";
     public static final String REWARD_REGEX = "^\\d+$";
 
@@ -32,9 +32,9 @@ public class NoticeValidatorImpl {
         if (!isValidAge(String.valueOf(notice.getPersonAge()))) {
             errorMessages.put(ERROR_AGE_MESSAGE, "Invalid age format");
         }
-//        if (!isValidDescription(notice.getDescription())) {
-//            errorMessages.put(ERROR_DESCRIPTION_MESSAGE, "Invalid description format");
-//        }
+        if (!isValidDescription(notice.getDescription())) {
+            errorMessages.put(ERROR_DESCRIPTION_MESSAGE, "Invalid description format");
+        }
         if (!isValidExecutionTime(String.valueOf(notice.getExecutionTime()))) {
             errorMessages.put(ERROR_EXECUTION_TIME_MESSAGE, "Invalid execution time format");
         }
@@ -60,9 +60,9 @@ public class NoticeValidatorImpl {
         return age != null && age.matches(AGE_REGEX);
     }
 
-    //    public boolean isValidDescription(String description) {
-//        return description != null && description.matches(DESCRIPTION_REGEX);
-//    }
+        public boolean isValidDescription(String description) {
+        return description != null && description.matches(DESCRIPTION_REGEX);
+    }
     public boolean isValidExecutionTime(String executionTime) {
         return executionTime != null && executionTime.matches(EXECUTION_TIME_REGEX);
     }
