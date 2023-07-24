@@ -23,7 +23,6 @@ public class ShowAllNoticesCommand implements Command {
         NoticeService noticeService = NoticeServiceImpl.getInstance();
         try {
             List<Notice> noticeList = noticeService.findAllNotice();
-            request.setAttribute(NOTICE_LIST, noticeList);
             if (!noticeList.isEmpty()) {
                 request.setAttribute(NOTICE_LIST, noticeList);
                 request.setAttribute(MESSAGE, "notices found: " + noticeList.size());
