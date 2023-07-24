@@ -31,8 +31,6 @@ public class EditNoticeCommand implements Command {
             throw new RuntimeException(e);
         }
         request.setAttribute(NOTICE, notice.get());
-        request.setAttribute(USER_ID, notice.get().getUserId());
-        request.setAttribute(NOTICE_ID, notice.get().getNoticeId());
         return "/pages/change_notice_info.jsp";
     }
 }
