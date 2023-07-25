@@ -9,15 +9,22 @@
 <html>
 <head>
     <title>Authorization</title>
+    <link rel="stylesheet" type="text/css" href="css/authorization.css">
+
 </head>
 <body>
-<form action="/WebMVC_war_exploded/controller" method="post">
-  <input type="hidden" name="command" value="login"/>
-  Login <input type="text" name="login" value=""/> <br>
-  Password <input type="password" name="password" value=""/><br>
-  <input type="submit" name="submit" value="Ok"/>
-  ${login_failed}
-</form>
-
+<div class="container">
+    <h1>Authorization</h1>
+    <form action="/WebMVC_war_exploded/controller" method="post">
+        <input type="hidden" name="command" value="login"/>
+        <label for="login">Login</label>
+        <input type="text" id="login" name="login" value=""/>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" value=""/>
+        <input type="submit" name="submit" value="Ok"/>
+        ${login_failed}<br>
+        Еще нет аккаунта? <a href="/WebMVC_war_exploded/pages/registration.jsp">Зарегистрируйтесь</a>
+    </form>
+</div>
 </body>
 </html>

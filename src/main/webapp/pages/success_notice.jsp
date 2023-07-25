@@ -1,17 +1,27 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: tdoro
-  Date: 17.07.2023
-  Time: 1:30
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Заявка</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            text-align: center;
+        }
+        h1 {
+            color: #007BFF;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-Заявка успешно подана
-<a href="/WebMVC_war_exploded/pages/profile.jsp">Вернуться обратно</a>
+<h1>Заявка успешно подана</h1>
+<p><a href="/WebMVC_war_exploded/pages/profile.jsp">Вернуться обратно</a></p>
 </body>
 </html>
